@@ -18,7 +18,7 @@ dependencies:
 
 You can get started really simple, just add
 
-<img src="https://github.com/victorevox/simple_tooltp/example/simple.png" align = "right" height = "350" alt="Basic">
+<img src="https://raw.githubusercontent.com/victorevox/simple_tooltp/master/example/simple.png" align = "right" height = "350" alt="Basic">
 
 
 ```dart
@@ -122,7 +122,7 @@ SimpleTooltip(
 ```
 
 ## Screenshots
-<img src="https://github.com/victorevox/simple_tooltp/example/simple_tooltip.gif" align = "right" height = "350" alt="Animated">
+<img src="https://raw.githubusercontent.com/victorevox/simple_tooltp/master/example/simple_tootip.gif" align = "right" height = "350" alt="Animated">
 
 ### This plugin was inspired by [super_tooltip](https://pub.dev/packages/super_tooltip)
 
