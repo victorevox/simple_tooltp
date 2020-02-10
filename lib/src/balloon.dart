@@ -14,11 +14,10 @@ class _Ballon extends StatelessWidget {
   // final double bottom;
   final double arrowLength;
   final Widget content;
-  // final double maxWidth;
-  // final double maxHeight;
-  // final double minWidth;
-  // final double minHeight;
   final EdgeInsets ballonPadding;
+  final Color backgroundColor;
+  final List<BoxShadow> shadows;
+  final Function onTap;
 
   const _Ballon({
     Key key,
@@ -32,57 +31,45 @@ class _Ballon extends StatelessWidget {
     @required this.borderWidth,
     @required this.arrowLength,
     @required this.ballonPadding,
+    @required this.backgroundColor,
+    @required this.shadows,
+    this.onTap,
     // this.left,
     // this.top,
     // this.right,
     // this.bottom,
-    // this.maxWidth,
-    // this.maxHeight,
-    // this.minWidth,
-    // this.minHeight,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final Size screenSize = MediaQuery.of(context).size;
-    // final double maxWidth = this.maxWidth ?? screenSize.width;
-    // final double maxHeight = this.maxHeight ?? screenSize.height;
-    // final double minWidth = this.minWidth ?? 10;
-    // final double minHeight = this.minHeight ?? 10;
-
-    // return Container(
-    //   decoration: BoxDecoration(color: Colors.red),
-    //   width: 10,
-    //   height: 10,
-    // );
-    AlignmentDirectional alignment;
-    Offset arrowOffset;
-    if (tooltipDirection == TooltipDirection.up) {
-      alignment = AlignmentDirectional.bottomCenter;
-      arrowOffset = Offset(-arrowBaseWidth / 2, 0);
-    } else if (tooltipDirection == TooltipDirection.down) {
-      alignment = AlignmentDirectional.topCenter;
-      arrowOffset = Offset(-arrowBaseWidth / 2, -arrowLength);
-    }
-    return Container(
-      decoration: ShapeDecoration(
-        shape: _BalloonShape(
-          tooltipDirection,
-          Offset.zero,
-          borderRadius,
-          arrowBaseWidth,
-          arrowTipDistance,
-          borderColor,
-          borderWidth,
-          // left,
-          // top,
-          // right,
-          // bottom,
-          arrowLength,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: onTap,
+      child: Container(
+              child: Container(
+          clipBehavior: Clip.none,
+          decoration: ShapeDecoration(
+            shadows: shadows,
+            color: backgroundColor,
+            shape: _BalloonShape(
+              tooltipDirection,
+              Offset.zero,
+              borderRadius,
+              arrowBaseWidth,
+              arrowTipDistance,
+              borderColor,
+              borderWidth,
+              // left,
+              // top,
+              // right,
+              // bottom,
+              arrowLength,
+            ),
+          ),
+          padding: ballonPadding,
+          child: content,
         ),
       ),
-      padding: ballonPadding,
-      child: content,
     );
   }
 }
@@ -155,9 +142,19 @@ class _BalloonShape extends ShapeBorder {
     bottomLeftRadius = /* (left == 0 || bottom == 0) ? 0.0 : */ borderRadius;
     bottomRightRadius = /* (right == 0 || bottom == 0) ? 0.0 : */ borderRadius;
 
+    // final Offset targetCenter = this.targetCenter;
+    Offset targetCenter = rect.center;
+    if (tooltipDirection == TooltipDirection.right) {
+      targetCenter =
+          rect.centerLeft.translate( - arrowLength, 0);
+    } else if (tooltipDirection == TooltipDirection.left) {
+      targetCenter =
+          rect.centerRight.translate(  arrowLength, 0);
+    }
+    // print(targetCenter);
+
     switch (tooltipDirection) {
       //
-
       case TooltipDirection.down:
         return _getBottomRightPath(rect)
           ..lineTo(
@@ -167,7 +164,7 @@ class _BalloonShape extends ShapeBorder {
                   rect.right - topRightRadius),
               rect.top)
           ..lineTo(targetCenter.dx,
-              rect.top - arrowLength + arrowTipDistance) // up to arrow tip   \
+              rect.top - arrowLength) // up to arrow tip   \
           ..lineTo(
               max(
                   min(targetCenter.dx - arrowBaseWidth / 2,
@@ -196,7 +193,7 @@ class _BalloonShape extends ShapeBorder {
 
           // up to arrow tip   \
           ..lineTo(
-              targetCenter.dx, rect.bottom + arrowTipDistance + arrowLength)
+              targetCenter.dx, rect.bottom + arrowLength)
 
           //  down /
           ..lineTo(
@@ -271,71 +268,7 @@ class _BalloonShape extends ShapeBorder {
       ..strokeWidth = borderWidth;
 
     canvas.drawPath(getOuterPath(rect), paint);
-    // paint = new Paint()
-    //   ..color = Colors.white
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = borderWidth;
-
-    // if (right == 0.0) {
-    //   if (top == 0.0 && bottom == 0.0) {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right, rect.top)
-    //           ..lineTo(rect.right, rect.bottom),
-    //         paint);
-    //   } else {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right, rect.top + borderWidth / 2)
-    //           ..lineTo(rect.right, rect.bottom - borderWidth / 2),
-    //         paint);
-    //   }
-    // }
-    // if (left == 0.0) {
-    //   if (top == 0.0 && bottom == 0.0) {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.left, rect.top)
-    //           ..lineTo(rect.left, rect.bottom),
-    //         paint);
-    //   } else {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.left, rect.top + borderWidth / 2)
-    //           ..lineTo(rect.left, rect.bottom - borderWidth / 2),
-    //         paint);
-    //   }
-    // }
-    // if (top == 0.0) {
-    //   if (left == 0.0 && right == 0.0) {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right, rect.top)
-    //           ..lineTo(rect.left, rect.top),
-    //         paint);
-    //   } else {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right - borderWidth / 2, rect.top)
-    //           ..lineTo(rect.left + borderWidth / 2, rect.top),
-    //         paint);
-    //   }
-    // }
-    // if (bottom == 0.0) {
-    //   if (left == 0.0 && right == 0.0) {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right, rect.bottom)
-    //           ..lineTo(rect.left, rect.bottom),
-    //         paint);
-    //   } else {
-    //     canvas.drawPath(
-    //         new Path()
-    //           ..moveTo(rect.right - borderWidth / 2, rect.bottom)
-    //           ..lineTo(rect.left + borderWidth / 2, rect.bottom),
-    //         paint);
-    //   }
-    // }
+    canvas.clipPath(getOuterPath(rect));
   }
 
   @override

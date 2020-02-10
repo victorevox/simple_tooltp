@@ -14,7 +14,7 @@ class _BallonPositioner extends StatelessWidget {
   // final double top;
   // final double right;
   // final double bottom;
-  final _Ballon child;
+  final Widget child;
   final double maxWidth;
   final double maxHeight;
   final double minWidth;
@@ -40,11 +40,11 @@ class _BallonPositioner extends StatelessWidget {
 
   @override
   Widget build(BuildContext _) {
+    if(context == null) {
+      return Container();
+    }
     RenderBox renderBox = context.findRenderObject();
     final RenderBox overlay = Overlay.of(context).context.findRenderObject();
-    // final Size size = renderBox.size;
-    // final double halfX = size.width / 2;
-    // final double halfY = size.height / 2;
 
     Offset tipTarget;
 
@@ -58,7 +58,7 @@ class _BallonPositioner extends StatelessWidget {
     } else if (tooltipDirection == TooltipDirection.left) {
       tipTarget = renderBox.size.centerLeft(zeroOffset);
     }
-    
+
     final globalTipTarget = renderBox.localToGlobal(
       tipTarget,
       ancestor: overlay,
@@ -133,22 +133,55 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
     double minWidth = this.minWidth ?? constraints.minWidth;
     double minHeight = this.minHeight ?? constraints.minHeight;
 
-    if (tooltipDirection == TooltipDirection.up || tooltipDirection == TooltipDirection.down) {
-      maxWidth = min(
-        (constraints.maxWidth - tipTarget.dx).abs() * 2 - outsidePadding, 
-        (tipTarget.dx).abs() * 2 - outsidePadding
+    if (tooltipDirection == TooltipDirection.up ||
+        tooltipDirection == TooltipDirection.down) {
+      maxWidth = max(
+        min(
+          (constraints.maxWidth - tipTarget.dx).abs() * 2 - outsidePadding,
+          (tipTarget.dx).abs() * 2 - outsidePadding,
+        ),
+        0,
       );
-      maxHeight = constraints.maxHeight - outsidePadding;
+      maxHeight = max(
+        constraints.maxHeight - outsidePadding,
+        0,
+      );
     } else if (tooltipDirection == TooltipDirection.right) {
-      maxWidth = (constraints.maxWidth - tipTarget.dx).abs() - outsidePadding - arrowLength - arrowTipDistance;
-      maxHeight = constraints.maxHeight - outsidePadding;
+      maxWidth = max(
+        (constraints.maxWidth - tipTarget.dx).abs() -
+            outsidePadding -
+            arrowLength -
+            arrowTipDistance,
+        0,
+      );
+      maxHeight = max(
+        constraints.maxHeight - outsidePadding,
+        0,
+      );
+    } else if (tooltipDirection == TooltipDirection.left) {
+      maxWidth = max(
+          min(
+            tipTarget.dx >= constraints.maxWidth
+                ? (constraints.maxWidth - tipTarget.dx).abs() -
+                    outsidePadding -
+                    arrowLength -
+                    arrowTipDistance
+                : maxWidth,
+            // (constraints.maxWidth - tipTarget.dx).abs() - outsidePadding - arrowLength - arrowTipDistance,
+            tipTarget.dx - (outsidePadding * 2) - arrowTipDistance,
+          ),
+          0);
+      maxHeight = max(
+        constraints.maxHeight - outsidePadding,
+        0,
+      );
     }
 
     return BoxConstraints(
-      maxHeight: this.maxHeight?? maxHeight,
-      maxWidth: this.maxWidth?? maxWidth,
-      minHeight: this.minHeight?? minHeight,
-      minWidth: this.minWidth?? minWidth,
+      maxHeight: this.maxHeight ?? maxHeight,
+      maxWidth: this.maxWidth ?? maxWidth,
+      minHeight: this.minHeight ?? minHeight,
+      minWidth: this.minWidth ?? minWidth,
     );
   }
 
@@ -158,14 +191,19 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
     final double halfH = childSize.height / 2;
     final double halfW = childSize.width / 2;
     Offset centerPosition = Offset(-halfW, -halfH);
-    if(tooltipDirection == TooltipDirection.up) {
-      ballonOffset = centerPosition.translate(0, -halfH - arrowLength - arrowTipDistance);
-    } else if(tooltipDirection == TooltipDirection.down) {
-      ballonOffset = centerPosition.translate(0, halfH + arrowLength + arrowTipDistance);
+    final xMin = outsidePadding + halfW;
+    if (tooltipDirection == TooltipDirection.up) {
+      final double yOffset = -halfH - arrowLength - arrowTipDistance;
+      ballonOffset = centerPosition.translate(0, yOffset);
+    } else if (tooltipDirection == TooltipDirection.down) {
+      final double yOffset = halfH + arrowLength + arrowTipDistance;
+      ballonOffset = centerPosition.translate(0, yOffset);
     } else if (tooltipDirection == TooltipDirection.right) {
-      ballonOffset = centerPosition.translate(halfW + arrowLength + arrowTipDistance, 0);
+      final double xOffset = halfW + arrowLength + arrowTipDistance;
+      ballonOffset = centerPosition.translate(xOffset, 0);
     } else if (tooltipDirection == TooltipDirection.left) {
-      ballonOffset = centerPosition.translate(-halfW - arrowLength - arrowTipDistance, 0);
+      final double xOffset = -halfW - arrowLength - arrowTipDistance;
+      ballonOffset = centerPosition.translate(xOffset, 0);
     } else {
       ballonOffset = centerPosition;
     }

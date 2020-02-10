@@ -1,21 +1,43 @@
 library tooltip;
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'types.dart';
+import 'types.dart';
+import 'types.dart';
+import 'types.dart';
+import 'types.dart';
 
 part 'balloon.dart';
 part 'balloon_positioner.dart';
+part 'ballon_transition.dart';
 
 class SimpleTooltip extends StatefulWidget {
+  /// The [child] which the tooltip will target to
   final Widget child;
+
+  /// Sets the tooltip direction
+  /// defaults to [TooltipDirection.up]
   final TooltipDirection tooltipDirection;
+
+  /// Defines the content that its placed inside the tooltip ballon
   final Widget content;
+
+  /// If true, it will display the tool , if false it will hide it
   final bool show;
+
   final Function onClose;
+
+  /// Sets the content padding
+  /// defautls to: `const EdgeInsets.symmetric(horizontal: 20, vertical: 16),`
   final EdgeInsets ballonPadding;
+
+  /// sets the duration of the tooltip entrance animation
+  /// defaults to [460] milliseconds
+  final Duration animationDuration;
 
   /// [top], [right], [bottom], [left] position the Tooltip absolute relative to the whole screen
   double top, right, bottom, left;
@@ -52,12 +74,23 @@ class SimpleTooltip extends StatefulWidget {
   /// The color of the border
   final Color borderColor;
 
+  ///
+  /// The color of the border
+  final Color backgroundColor;
+
+  ///
+  /// Set a custom list of [BoxShadow]
+  /// defaults to `const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),`
+  final List<BoxShadow> customShadows;
+
+  final Function() tooltipTap;
+
   SimpleTooltip({
     Key key,
     this.child,
     this.tooltipDirection = TooltipDirection.up,
     this.content,
-    this.show,
+    @required this.show,
     this.onClose,
     this.ballonPadding =
         const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -65,14 +98,22 @@ class SimpleTooltip extends StatefulWidget {
     this.minWidth,
     this.maxHeight,
     this.minHeight,
-    this.arrowTipDistance = 2,
+    this.arrowTipDistance = 6,
     this.arrowLength = 20,
     this.minimumOutSidePadding = 20.0,
     this.arrowBaseWidth = 20.0,
     this.borderRadius = 10,
     this.borderWidth = 2.0,
     this.borderColor = const Color(0xFF50FFFF),
-  }) : super(key: key);
+    this.animationDuration = const Duration(milliseconds: 460),
+    this.backgroundColor = const Color(0xFFFFFFFF),
+    this.customShadows = const [
+      const BoxShadow(
+          color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
+    ],
+    this.tooltipTap,
+  })  : assert(show != null),
+        super(key: key);
 
   @override
   _SimpleTooltipState createState() => _SimpleTooltipState();
@@ -82,6 +123,9 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
   bool _displaying = false;
 
   final LayerLink layerLink = LayerLink();
+
+  // To avoid rebuild state of widget for each rebuild
+  GlobalKey _transitionKey = GlobalKey();
 
   OverlayEntry overlayEntry;
 
@@ -100,6 +144,9 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
     super.didUpdateWidget(oldWidget);
     _hideTooltip();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (oldWidget.tooltipDirection != widget.tooltipDirection) {
+        _transitionKey = GlobalKey();
+      }
       if (widget.show) {
         _showTooltip();
       } else {
@@ -149,17 +196,24 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
           minHeight: widget.minHeight,
           maxWidth: widget.maxWidth,
           minWidth: widget.minWidth,
-          child: _Ballon(
-            content: widget.content,
-            borderRadius: widget.borderRadius,
-            arrowBaseWidth: widget.arrowBaseWidth,
-            arrowLength: widget.arrowLength,
-            arrowTipDistance: widget.arrowTipDistance,
-            ballonPadding: widget.ballonPadding,
-            borderColor: widget.borderColor,
-            borderWidth: widget.borderWidth,
+          child: _BalloonTransition(
+            key: _transitionKey,
+            duration: widget.animationDuration,
             tooltipDirection: widget.tooltipDirection,
-            
+            child: _Ballon(
+              content: widget.content,
+              borderRadius: widget.borderRadius,
+              arrowBaseWidth: widget.arrowBaseWidth,
+              arrowLength: widget.arrowLength,
+              arrowTipDistance: widget.arrowTipDistance,
+              ballonPadding: widget.ballonPadding,
+              borderColor: widget.borderColor,
+              borderWidth: widget.borderWidth,
+              tooltipDirection: widget.tooltipDirection,
+              backgroundColor: widget.backgroundColor,
+              shadows: widget.customShadows,
+              onTap: widget.tooltipTap,
+            ),
           ),
           // arrowBaseWidth: widget.arrowBaseWidth,
           arrowLength: widget.arrowLength,
