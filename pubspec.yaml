@@ -1,8 +1,7 @@
 name: simple_tooltip
 description: A new Flutter package project.
 version: 0.1.0
-author:
-homepage:
+homepage: https://github.com/victorevox/simple_tooltp
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
