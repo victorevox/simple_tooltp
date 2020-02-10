@@ -18,7 +18,7 @@ dependencies:
 
 You can get started really simple, just add
 
-<img src="https://github.com/victorevox/simple_tooltp" align = "right" height = "350" alt="Basic">
+<img src="https://github.com/victorevox/simple_tooltp/example/simple.png" align = "right" height = "350" alt="Basic">
 
 
 ```dart
