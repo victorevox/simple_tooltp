@@ -46,29 +46,26 @@ class _Ballon extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Container(
-              child: Container(
-          clipBehavior: Clip.none,
-          decoration: ShapeDecoration(
-            shadows: shadows,
-            color: backgroundColor,
-            shape: _BalloonShape(
-              tooltipDirection,
-              Offset.zero,
-              borderRadius,
-              arrowBaseWidth,
-              arrowTipDistance,
-              borderColor,
-              borderWidth,
-              // left,
-              // top,
-              // right,
-              // bottom,
-              arrowLength,
-            ),
+        decoration: ShapeDecoration(
+          shadows: shadows,
+          color: backgroundColor,
+          shape: _BalloonShape(
+            tooltipDirection,
+            Offset.zero,
+            borderRadius,
+            arrowBaseWidth,
+            arrowTipDistance,
+            borderColor,
+            borderWidth,
+            // left,
+            // top,
+            // right,
+            // bottom,
+            arrowLength,
           ),
-          padding: ballonPadding,
-          child: content,
         ),
+        padding: ballonPadding,
+        child: content,
       ),
     );
   }
@@ -145,11 +142,9 @@ class _BalloonShape extends ShapeBorder {
     // final Offset targetCenter = this.targetCenter;
     Offset targetCenter = rect.center;
     if (tooltipDirection == TooltipDirection.right) {
-      targetCenter =
-          rect.centerLeft.translate( - arrowLength, 0);
+      targetCenter = rect.centerLeft.translate(-arrowLength, 0);
     } else if (tooltipDirection == TooltipDirection.left) {
-      targetCenter =
-          rect.centerRight.translate(  arrowLength, 0);
+      targetCenter = rect.centerRight.translate(arrowLength, 0);
     }
     // print(targetCenter);
 
@@ -163,8 +158,8 @@ class _BalloonShape extends ShapeBorder {
                       rect.left + borderRadius + arrowBaseWidth),
                   rect.right - topRightRadius),
               rect.top)
-          ..lineTo(targetCenter.dx,
-              rect.top - arrowLength) // up to arrow tip   \
+          ..lineTo(
+              targetCenter.dx, rect.top - arrowLength) // up to arrow tip   \
           ..lineTo(
               max(
                   min(targetCenter.dx - arrowBaseWidth / 2,
@@ -192,8 +187,7 @@ class _BalloonShape extends ShapeBorder {
               rect.bottom)
 
           // up to arrow tip   \
-          ..lineTo(
-              targetCenter.dx, rect.bottom + arrowLength)
+          ..lineTo(targetCenter.dx, rect.bottom + arrowLength)
 
           //  down /
           ..lineTo(
