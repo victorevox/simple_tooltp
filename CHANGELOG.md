@@ -1,3 +1,7 @@
+## [0.1.3] - 11/02/20.
+
+* Minor Fixes
+
 ## [0.1.2] - 11/02/20.
 
 * Fix `clipBehavior: Clip.none,` error

@@ -118,9 +118,11 @@ class __OpacityAnimationWrapperState extends State<_OpacityAnimationWrapper> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _opacity = 1;
-      });
+      if(mounted) {
+        setState(() {
+          _opacity = 1;
+        });
+      }
     });
   }
 

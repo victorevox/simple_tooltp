@@ -44,7 +44,14 @@ class _BallonPositioner extends StatelessWidget {
       return Container();
     }
     RenderBox renderBox = context.findRenderObject();
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+    if(!renderBox.attached) {
+      return Container();
+    }
+    final cOverlay = Overlay.of(context);
+    if(!cOverlay.mounted) {
+      return Container();
+    }
+    final RenderBox overlay = cOverlay.context.findRenderObject();
 
     Offset tipTarget;
 
