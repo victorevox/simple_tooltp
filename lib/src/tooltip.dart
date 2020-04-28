@@ -126,6 +126,7 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
 
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
+  GlobalKey _positionerKey = GlobalKey();
 
   OverlayEntry overlayEntry;
 
@@ -190,6 +191,7 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
     return OverlayEntry(
       builder: (overlayContext) {
         return _BallonPositioner(
+          key: _positionerKey,
           link: layerLink,
           tooltipDirection: widget.tooltipDirection,
           maxHeight: widget.maxHeight,
@@ -223,19 +225,5 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
         );
       },
     );
-  }
-}
-
-class _BallonLayoutDelegate extends SingleChildLayoutDelegate {
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    double yOffset;
-    double xOffset = -childSize.width / 2;
-    return Offset.zero;
-  }
-
-  @override
-  bool shouldRelayout(SingleChildLayoutDelegate oldDelegate) {
-    return false;
   }
 }

@@ -1,3 +1,7 @@
+## [0.1.4] - 28/04/20.
+
+* Fix tooltip not handling "tap" events in specific scenarios
+
 ## [0.1.3] - 11/02/20.
 
 * Minor Fixes

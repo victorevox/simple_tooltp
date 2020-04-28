@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
@@ -87,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       : EdgeInsets.only(right: margin),
                   child: SimpleTooltip(
                     tooltipTap: () {
-                      print("tooltip tap");
+                      print("tooltip tap ${Random().nextDouble()}");
                     },
                     backgroundColor:
                         _marginAnimationStatus == AnimationStatus.forward
