@@ -1,3 +1,7 @@
+## [0.1.5] - 28/04/20.
+
+* Fix issue where not setting tooltip offset correctly at first build round
+
 ## [0.1.4] - 28/04/20.
 
 * Fix tooltip not handling "tap" events in specific scenarios

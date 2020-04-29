@@ -119,7 +119,14 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         final ballonSize = ballonContext.size;
         _ballonWidth = ballonSize.width;
         _ballonHeight = ballonSize.height;
+        final wasNull = _ballonSize == null;
         _ballonSize = ballonSize;
+
+        if(wasNull) {
+          setState(() {
+            
+          });
+        }
         // print("_ballonWidth: $_ballonWidth , _ballonHeight: $_ballonHeight");
       }
     });
