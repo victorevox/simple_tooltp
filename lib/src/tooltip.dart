@@ -6,10 +6,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'types.dart';
-import 'types.dart';
-import 'types.dart';
-import 'types.dart';
-import 'types.dart';
 
 part 'balloon.dart';
 part 'balloon_positioner.dart';
@@ -129,6 +125,13 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
   GlobalKey _positionerKey = GlobalKey();
 
   OverlayEntry overlayEntry;
+
+  @override 
+  void dispose() {
+    _hideTooltip();
+
+    super.dispose();
+  }
 
   @override
   void initState() {
