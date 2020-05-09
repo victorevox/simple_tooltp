@@ -117,7 +117,15 @@ SimpleTooltip(
   /// defaults to `const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),`
   final List<BoxShadow> customShadows;
 
+  ///
+  /// Set a handler for listening to a `tap` event on the tooltip (This is the recommended way to put your logic for dismissing the tooltip)
   final Function() tooltipTap;
+
+  ///
+  /// If you want to automatically dismiss the tooltip whenever a user taps on it, set this flag to [true]
+  /// For more control on when to dismiss the tooltip please rely on the [show] property and [tooltipTap] handler
+  /// defaults to [false]
+  final bool hideOnTooltipTap;
 
 ```
 

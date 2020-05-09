@@ -4,12 +4,16 @@ class _BalloonTransition extends StatefulWidget {
   final Widget child;
   final Duration duration;
   final TooltipDirection tooltipDirection;
+  final bool hide;
+  final Function(AnimationStatus) animationEnd;
 
   _BalloonTransition({
     Key key,
     @required this.child,
     @required this.duration,
     @required this.tooltipDirection,
+    this.hide = false,
+    this.animationEnd,
   }) : super(key: key);
 
   @override
@@ -24,36 +28,61 @@ class _BalloonTransitionState extends State<_BalloonTransition>
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: widget.duration);
-    final CurvedAnimation curvedAnimation =
-        CurvedAnimation(curve: Curves.bounceOut, parent: _animationController);
-    _rotationAnimation =
-        Tween<double>(begin: pi * .6, end: 0).animate(curvedAnimation);
-    _animationController.forward();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+    final CurvedAnimation curvedAnimation = CurvedAnimation(
+      curve: Curves.bounceOut,
+      parent: _animationController,
+    );
+    _rotationAnimation = Tween<double>(begin: pi * .5, end: 0).animate(
+      curvedAnimation,
+    );
+    if (!widget.hide) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    _animationController.addStatusListener((status) {
+      if ((status == AnimationStatus.completed ||
+              status == AnimationStatus.dismissed) &&
+          widget.animationEnd != null) {
+        widget.animationEnd(status);
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(_BalloonTransition oldWidget) {
+    if (widget.hide) {
+      _animationController.reverse();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     return _OpacityAnimationWrapper(
-        duration: widget.duration,
-        child: AnimatedBuilder(
-          animation: _rotationAnimation,
-          builder: (context, _) {
-            // print(_rotationAnimation.value);
-            _BallonTransformation _ballonTransformation =
-                _BallonTransformation.forAnimationValue(
-              _rotationAnimation.value,
-              widget.tooltipDirection,
-            );
-            return Transform(
-              child: widget.child,
-              // transform: Matrix4.identity()..setEntry(1, 2, _rotationAnimation.value),
-              alignment: _ballonTransformation.alignment,
-              transform: _ballonTransformation.transformation,
-            );
-          },
-        ));
+      duration: widget.duration,
+      child: AnimatedBuilder(
+        animation: _rotationAnimation,
+        builder: (context, _) {
+          // print(_rotationAnimation.value);
+          _BallonTransformation _ballonTransformation =
+              _BallonTransformation.forAnimationValue(
+            _rotationAnimation.value,
+            widget.tooltipDirection,
+          );
+          return Transform(
+            child: widget.child,
+            // transform: Matrix4.identity()..setEntry(1, 2, _rotationAnimation.value),
+            alignment: _ballonTransformation.alignment,
+            transform: _ballonTransformation.transformation,
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -118,7 +147,7 @@ class __OpacityAnimationWrapperState extends State<_OpacityAnimationWrapper> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _opacity = 1;
         });

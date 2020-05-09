@@ -54,6 +54,15 @@ class __BallonPositionerState extends State<_BallonPositioner> {
   }
 
   @override
+  void didUpdateWidget (_BallonPositioner oldWidget) {
+    if(widget.tooltipDirection != oldWidget.tooltipDirection) {
+      // invalidate ballon size to perform recalculation
+      _ballonSize = null;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext _) {
     if (widget.context == null) {
       return Container();
@@ -83,6 +92,11 @@ class __BallonPositionerState extends State<_BallonPositioner> {
 
     final globalTipTarget = renderBox.localToGlobal(
       tipTarget,
+      ancestor: overlay,
+    );
+
+    final debugg = renderBox.localToGlobal(
+      renderBox.size.center(zeroOffset),
       ancestor: overlay,
     );
 

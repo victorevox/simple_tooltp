@@ -1,3 +1,11 @@
+## [0.1.7] - 9/05/20.
+
+* Added animation when dismissing https://github.com/victorevox/simple_tooltp/issues/6
+* Fix borderWidth=0 not honoured https://github.com/victorevox/simple_tooltp/issues/7
+* Added [hideOnTooltipTap] capability, requested https://github.com/victorevox/simple_tooltp/issues/5
+* Updated README
+* Other fixes
+
 ## [0.1.6] - 9/05/20.
 
 * Ensure tooltip is hidden when dispossing (fix: https://github.com/victorevox/simple_tooltp/issues/9)

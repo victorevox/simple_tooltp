@@ -257,7 +257,8 @@ class _BalloonShape extends ShapeBorder {
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
     Paint paint = new Paint()
-      ..color = borderColor
+      // if borderWidth is set to 0, set the color to be transparent to avoid border to be visible because strange behavior
+      ..color = borderWidth == 0? Color(0x00000000) : borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = borderWidth;
 

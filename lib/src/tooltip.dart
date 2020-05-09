@@ -79,7 +79,15 @@ class SimpleTooltip extends StatefulWidget {
   /// defaults to `const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),`
   final List<BoxShadow> customShadows;
 
+  ///
+  /// Set a handler for listening to a `tap` event on the tooltip (This is the recommended way to put your logic for dismissing the tooltip)
   final Function() tooltipTap;
+
+  ///
+  /// If you want to automatically dismiss the tooltip whenever a user taps on it, set this flag to [true]
+  /// For more control on when to dismiss the tooltip please rely on the [show] property and [tooltipTap] handler
+  /// defaults to [false]
+  final bool hideOnTooltipTap;
 
   SimpleTooltip({
     Key key,
@@ -108,6 +116,7 @@ class SimpleTooltip extends StatefulWidget {
           color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
     ],
     this.tooltipTap,
+    this.hideOnTooltipTap = false,
   })  : assert(show != null),
         super(key: key);
 
@@ -126,9 +135,9 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
 
   OverlayEntry overlayEntry;
 
-  @override 
+  @override
   void dispose() {
-    _hideTooltip();
+    _removeTooltip();
 
     super.dispose();
   }
@@ -145,24 +154,25 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
 
   @override
   void didUpdateWidget(SimpleTooltip oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _hideTooltip();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (oldWidget.tooltipDirection != widget.tooltipDirection) {
+      if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
+      _removeTooltip();
       if (widget.show) {
         _showTooltip();
-      } else {
-        _hideTooltip();
+      } else if (oldWidget.show) {
+        _showTooltip(buildHidding: true);
+        // setState(() {
+        // });
       }
     });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // _hideTooltip();
   }
 
   @override
@@ -173,16 +183,24 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
     );
   }
 
-  void _showTooltip() {
+  void _showTooltip({
+    bool buildHidding = false,
+  }) {
     if (_displaying || !mounted) {
       return;
     }
-    this.overlayEntry = this._buildOverlay();
-    Overlay.of(context).insert(this.overlayEntry);
-    this._displaying = true;
+    overlayEntry = _buildOverlay(
+      buildHidding: buildHidding,
+    );
+    Overlay.of(context).insert(overlayEntry);
+    _displaying = true;
   }
 
-  void _hideTooltip() {
+  // void _hideToolTip() {
+  //   _hide = true;
+  // }
+
+  void _removeTooltip() {
     if (!_displaying) {
       return;
     }
@@ -190,7 +208,9 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
     _displaying = false;
   }
 
-  OverlayEntry _buildOverlay() {
+  OverlayEntry _buildOverlay({
+    bool buildHidding = false,
+  }) {
     return OverlayEntry(
       builder: (overlayContext) {
         return _BallonPositioner(
@@ -205,6 +225,12 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
             key: _transitionKey,
             duration: widget.animationDuration,
             tooltipDirection: widget.tooltipDirection,
+            hide: buildHidding,
+            animationEnd: (status) {
+              if (status == AnimationStatus.dismissed) {
+                _removeTooltip();
+              }
+            },
             child: _Ballon(
               content: widget.content,
               borderRadius: widget.borderRadius,
@@ -217,7 +243,15 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
               tooltipDirection: widget.tooltipDirection,
               backgroundColor: widget.backgroundColor,
               shadows: widget.customShadows,
-              onTap: widget.tooltipTap,
+              onTap: () {
+                if (widget.hideOnTooltipTap) {
+                  _removeTooltip();
+                  _showTooltip(buildHidding: true);
+                }
+                if (widget.tooltipTap != null) {
+                  widget.tooltipTap();
+                }
+              },
             ),
           ),
           // arrowBaseWidth: widget.arrowBaseWidth,
