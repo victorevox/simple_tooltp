@@ -70,15 +70,24 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              SimpleTooltip(
-                show: _show,
-                tooltipDirection: _direction,
-                hideOnTooltipTap: hideOnTap,
-                borderWidth: _changeBorder? 0 : 3,
-                child: Container(
-                  color: Colors.cyan,
-                  width: 80,
-                  height: 80,
+              Align(
+                alignment: AlignmentDirectional.center,
+                child: SimpleTooltip(
+                  show: _show,
+                  tooltipDirection: _direction,
+                  hideOnTooltipTap: hideOnTap,
+                  borderWidth: _changeBorder ? 0 : 3,
+                  child: Container(
+                    color: Colors.cyan,
+                    width: 80,
+                    height: 80,
+                  ),
+                  minWidth: 200,
+                  content: Container(
+                    width: 200,
+                    child: Text("content!"),
+                    color: Colors.blue,
+                  ),
                 ),
               )
             ],

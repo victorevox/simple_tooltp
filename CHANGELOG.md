@@ -1,3 +1,7 @@
+## [0.1.8] - 9/05/20.
+
+* Fix minWidth doesn't work and throws errors https://github.com/victorevox/simple_tooltp/issues/3
+
 ## [0.1.7] - 9/05/20.
 
 * Added animation when dismissing https://github.com/victorevox/simple_tooltp/issues/6

@@ -5,11 +5,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
 import 'types.dart';
 
+part 'ballon_transition.dart';
 part 'balloon.dart';
 part 'balloon_positioner.dart';
-part 'ballon_transition.dart';
 
 class SimpleTooltip extends StatefulWidget {
   /// The [child] which the tooltip will target to
@@ -91,9 +92,9 @@ class SimpleTooltip extends StatefulWidget {
 
   SimpleTooltip({
     Key key,
-    this.child,
+    @required this.child,
     this.tooltipDirection = TooltipDirection.up,
-    this.content,
+    @required this.content,
     @required this.show,
     this.onClose,
     this.ballonPadding =
@@ -155,7 +156,8 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
   @override
   void didUpdateWidget(SimpleTooltip oldWidget) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
+      if (oldWidget.tooltipDirection != widget.tooltipDirection ||
+          (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
       _removeTooltip();

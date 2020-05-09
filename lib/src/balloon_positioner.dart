@@ -54,8 +54,8 @@ class __BallonPositionerState extends State<_BallonPositioner> {
   }
 
   @override
-  void didUpdateWidget (_BallonPositioner oldWidget) {
-    if(widget.tooltipDirection != oldWidget.tooltipDirection) {
+  void didUpdateWidget(_BallonPositioner oldWidget) {
+    if (widget.tooltipDirection != oldWidget.tooltipDirection) {
       // invalidate ballon size to perform recalculation
       _ballonSize = null;
     }
@@ -136,10 +136,8 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         final wasNull = _ballonSize == null;
         _ballonSize = ballonSize;
 
-        if(wasNull) {
-          setState(() {
-            
-          });
+        if (wasNull) {
+          setState(() {});
         }
         // print("_ballonWidth: $_ballonWidth , _ballonHeight: $_ballonHeight");
       }
@@ -148,7 +146,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     // double xPosition;
     // double yPosition;
 
-    final offset = getPositionForChild(_ballonSize);
+    final offset = getPositionForChild(_ballonSize, overlay, globalTipTarget);
 
     return CompositedTransformFollower(
       link: widget.link,
@@ -176,7 +174,11 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     );
   }
 
-  Offset getPositionForChild(Size childSize) {
+  Offset getPositionForChild(
+    Size childSize,
+    RenderBox overlay,
+    Offset globalTipTarget,
+  ) {
     if (childSize == null) {
       return Offset.zero;
     }
@@ -189,6 +191,24 @@ class __BallonPositionerState extends State<_BallonPositioner> {
       final double yOffset =
           -halfH - widget.arrowLength - widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(0, yOffset);
+      final maxXOffset = overlay.size.width;
+      final globalBalloonRightBoundingOffset =
+          globalTipTarget.dx + ballonOffset.dx + childSize.width;
+      if (globalBalloonRightBoundingOffset > maxXOffset) {
+        ballonOffset = ballonOffset.translate(
+          maxXOffset - globalBalloonRightBoundingOffset - widget.outsidePadding,
+          0,
+        );
+      }
+      final minXOffset = 0;
+      final globalBalloonLeftBoundingOffset =
+          globalTipTarget.dx + ballonOffset.dx;
+      if (globalBalloonLeftBoundingOffset < minXOffset) {
+        ballonOffset = ballonOffset.translate(
+          minXOffset - globalBalloonLeftBoundingOffset + widget.outsidePadding,
+          0,
+        );
+      }
     } else if (widget.tooltipDirection == TooltipDirection.down) {
       final double yOffset =
           halfH + widget.arrowLength + widget.arrowTipDistance;
@@ -197,10 +217,28 @@ class __BallonPositionerState extends State<_BallonPositioner> {
       final double xOffset =
           halfW + widget.arrowLength + widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
+      final maxXOffset = overlay.size.width;
+      final globalBalloonRightBoundingOffset =
+          globalTipTarget.dx + ballonOffset.dx + childSize.width;
+      if (globalBalloonRightBoundingOffset > maxXOffset) {
+        ballonOffset = ballonOffset.translate(
+          maxXOffset - globalBalloonRightBoundingOffset - widget.outsidePadding,
+          0,
+        );
+      }
     } else if (widget.tooltipDirection == TooltipDirection.left) {
       final double xOffset =
           -halfW - widget.arrowLength - widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
+      final minXOffset = 0;
+      final globalBalloonLeftBoundingOffset =
+          globalTipTarget.dx + ballonOffset.dx;
+      if (globalBalloonLeftBoundingOffset < minXOffset) {
+        ballonOffset = ballonOffset.translate(
+          minXOffset - globalBalloonLeftBoundingOffset + widget.outsidePadding,
+          0,
+        );
+      }
     } else {
       ballonOffset = centerPosition;
     }
@@ -288,8 +326,8 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
     }
 
     return BoxConstraints(
-      maxHeight: this.maxHeight ?? maxHeight,
-      maxWidth: this.maxWidth ?? maxWidth,
+      maxHeight: this.maxHeight ?? max(maxHeight, minHeight),
+      maxWidth: this.maxWidth ?? max(maxWidth, minWidth),
       minHeight: this.minHeight ?? minHeight,
       minWidth: this.minWidth ?? minWidth,
     );
