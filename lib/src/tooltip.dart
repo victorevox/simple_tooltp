@@ -126,6 +126,13 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
 
   OverlayEntry overlayEntry;
 
+  @override 
+  void dispose() {
+    _hideTooltip();
+
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
