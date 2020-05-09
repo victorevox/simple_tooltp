@@ -1,3 +1,8 @@
+## [0.1.6] - 9/05/20.
+
+* Ensure tooltip is hidden when dispossing (fix: https://github.com/victorevox/simple_tooltp/issues/9)
+* Merged https://github.com/victorevox/simple_tooltp/pull/10 (Thanks @rgb1380)
+
 ## [0.1.5] - 28/04/20.
 
 * Fix issue where not setting tooltip offset correctly at first build round
