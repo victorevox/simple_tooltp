@@ -6,10 +6,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'types.dart';
-import 'types.dart';
-import 'types.dart';
-import 'types.dart';
-import 'types.dart';
 
 part 'balloon.dart';
 part 'balloon_positioner.dart';
