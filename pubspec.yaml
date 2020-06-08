@@ -1,6 +1,6 @@
 name: simple_tooltip
 description: A simple library for creating tooltips
-version: 0.1.9
+version: 0.1.10
 homepage: https://github.com/victorevox/simple_tooltp
 
 environment:

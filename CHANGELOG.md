@@ -1,3 +1,7 @@
+## [0.1.10] - 8/06/20.
+
+* Some fixes on implementation of route aware logic
+
 ## [0.1.9] - 8/06/20.
 
 * New [routeObserver] property, widget will listen for route transition and will hide tooltip when the widget's route is not active

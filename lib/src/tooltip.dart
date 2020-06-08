@@ -139,8 +139,8 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
   GlobalKey _positionerKey = GlobalKey();
-  // Key for identifying overlay for visivility detector
-  GlobalKey _visibilityKey = GlobalKey();
+
+  bool _routeIsShowing = true;
 
   OverlayEntry overlayEntry;
 
@@ -178,6 +178,9 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
       if (oldWidget.tooltipDirection != widget.tooltipDirection ||
           (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
+      }
+      if(!_routeIsShowing) {
+        return;
       }
       _removeTooltip();
       if (widget.show) {
@@ -282,6 +285,7 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   @override
   void didPush() {
+    _routeIsShowing = true;
     // Route was pushed onto navigator and is now topmost route.
     if (widget.show) {
       _removeTooltip();
@@ -291,11 +295,13 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   @override
   void didPushNext() {
+    _routeIsShowing = false;
     _removeTooltip();
   }
 
   @override
   void didPopNext() async {
+    _routeIsShowing = true;
     if (widget.show) {
       _removeTooltip();
       await Future.delayed(Duration(milliseconds: 100));
