@@ -5,19 +5,53 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 import 'animated_example_page.dart';
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+    return _MyAppData(
+      routeObserver: routeObserver,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: OptionsPage(),
+        navigatorObservers: [
+          routeObserver,
+        ],
       ),
-      home: OptionsPage(),
     );
+  }
+
+  static _MyAppData of(BuildContext context) {
+    return _MyAppData.of(context);
+  }
+}
+
+class _MyAppData extends InheritedWidget {
+  final RouteObserver<PageRoute> routeObserver;
+
+  _MyAppData({
+    Key key,
+    this.child,
+    this.routeObserver,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+
+  static _MyAppData of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<_MyAppData>();
+  }
+
+  @override
+  bool updateShouldNotify(_MyAppData oldWidget) {
+    return oldWidget.routeObserver != routeObserver;
   }
 }
 

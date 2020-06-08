@@ -1,3 +1,7 @@
+## [0.1.9] - 8/06/20.
+
+* New [routeObserver] property, widget will listen for route transition and will hide tooltip when the widget's route is not active
+
 ## [0.1.8] - 9/05/20.
 
 * Fix minWidth doesn't work and throws errors https://github.com/victorevox/simple_tooltp/issues/3

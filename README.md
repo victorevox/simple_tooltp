@@ -127,6 +127,11 @@ SimpleTooltip(
   /// defaults to [false]
   final bool hideOnTooltipTap;
 
+  ///
+  /// Pass a `RouteObserver` so that the widget will listen for route transition and will hide tooltip when
+  /// the widget's route is not active
+  final RouteObserver<PageRoute> routeObserver;
+
 ```
 
 ## Screenshots

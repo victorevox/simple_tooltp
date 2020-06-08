@@ -90,6 +90,11 @@ class SimpleTooltip extends StatefulWidget {
   /// defaults to [false]
   final bool hideOnTooltipTap;
 
+  ///
+  /// Pass a `RouteObserver` so that the widget will listen for route transition and will hide tooltip when
+  /// the widget's route is not active
+  final RouteObserver<PageRoute> routeObserver;
+
   SimpleTooltip({
     Key key,
     @required this.child,
@@ -118,6 +123,7 @@ class SimpleTooltip extends StatefulWidget {
     ],
     this.tooltipTap,
     this.hideOnTooltipTap = false,
+    this.routeObserver,
   })  : assert(show != null),
         super(key: key);
 
@@ -125,7 +131,7 @@ class SimpleTooltip extends StatefulWidget {
   _SimpleTooltipState createState() => _SimpleTooltipState();
 }
 
-class _SimpleTooltipState extends State<SimpleTooltip> {
+class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   bool _displaying = false;
 
   final LayerLink layerLink = LayerLink();
@@ -133,13 +139,21 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
   GlobalKey _positionerKey = GlobalKey();
+  // Key for identifying overlay for visivility detector
+  GlobalKey _visibilityKey = GlobalKey();
 
   OverlayEntry overlayEntry;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // widget.routeObserver.subscribe(this, ModalRoute.of(context));
+  }
+
+  @override
   void dispose() {
     _removeTooltip();
-
+    widget.routeObserver?.unsubscribe(this);
     super.dispose();
   }
 
@@ -150,11 +164,16 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
       if (widget.show) {
         _showTooltip();
       }
+      widget.routeObserver?.subscribe(this, ModalRoute.of(context));
     });
   }
 
   @override
   void didUpdateWidget(SimpleTooltip oldWidget) {
+    if (oldWidget.routeObserver != widget.routeObserver) {
+      oldWidget.routeObserver?.unsubscribe(this);
+      widget.routeObserver?.subscribe(this, ModalRoute.of(context));
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (oldWidget.tooltipDirection != widget.tooltipDirection ||
           (oldWidget.show != widget.show && widget.show)) {
@@ -170,11 +189,6 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
       }
     });
     super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   @override
@@ -194,7 +208,7 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
     overlayEntry = _buildOverlay(
       buildHidding: buildHidding,
     );
-    Overlay.of(context).insert(overlayEntry);
+    Overlay.of(context, rootOverlay: false).insert(overlayEntry);
     _displaying = true;
   }
 
@@ -264,5 +278,29 @@ class _SimpleTooltipState extends State<SimpleTooltip> {
         );
       },
     );
+  }
+
+  @override
+  void didPush() {
+    // Route was pushed onto navigator and is now topmost route.
+    if (widget.show) {
+      _removeTooltip();
+      _showTooltip();
+    }
+  }
+
+  @override
+  void didPushNext() {
+    _removeTooltip();
+  }
+
+  @override
+  void didPopNext() async {
+    if (widget.show) {
+      _removeTooltip();
+      await Future.delayed(Duration(milliseconds: 100));
+      _showTooltip();
+    }
+    // Covering route was popped off the navigator.
   }
 }

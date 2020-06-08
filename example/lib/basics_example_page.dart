@@ -1,3 +1,4 @@
+import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
@@ -88,8 +89,22 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                     child: Text("content!"),
                     color: Colors.blue,
                   ),
+                  routeObserver: MyApp.of(context).routeObserver,
                 ),
-              )
+              ),
+              RaisedButton(
+                child: Text("New route"),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) {
+                      return Scaffold(
+                        appBar: AppBar(),
+                        body: Placeholder(),
+                      );
+                    }),
+                  );
+                },
+              ),
             ],
           ),
         ),
