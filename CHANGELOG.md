@@ -1,3 +1,7 @@
+## [0.1.11] - 23/06/20.
+
+* Some fixes on implementation of route aware logic
+
 ## [0.1.10] - 8/06/20.
 
 * Some fixes on implementation of route aware logic

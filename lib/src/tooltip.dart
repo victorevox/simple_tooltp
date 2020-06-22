@@ -223,6 +223,11 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     if (!_displaying) {
       return;
     }
+
+    if (widget.onClose != null) {
+      widget.onClose();
+    }
+
     this.overlayEntry.remove();
     _displaying = false;
   }
