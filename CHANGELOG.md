@@ -1,3 +1,7 @@
+## [0.1.12] - 9/07/20.
+
+* Small change
+
 ## [0.1.11] - 9/07/20.
 
 * Added `ObfuscateTooltipItem` widget, it allows for a tooltip to automatically hide when a `ObfuscateTooltipItem` widget it's inside tooltip's boundings, useful for autohide on Dialogs or Stacks. For more detail look at the new *Obfucaste* example;

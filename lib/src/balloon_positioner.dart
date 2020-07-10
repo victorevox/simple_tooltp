@@ -77,6 +77,10 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     }
     final RenderBox overlay = cOverlay.context.findRenderObject();
 
+    if (renderBox == null || overlay == null) {
+      return Container();
+    }
+
     Offset tipTarget;
 
     final Offset zeroOffset = Offset.zero;
