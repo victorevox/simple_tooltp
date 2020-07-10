@@ -148,29 +148,33 @@ class __BallonPositionerState extends State<_BallonPositioner> {
 
     final offset = getPositionForChild(_ballonSize, overlay, globalTipTarget);
 
-    return CompositedTransformFollower(
-      link: widget.link,
-      showWhenUnlinked: false,
-      offset: tipTarget.translate(offset.dx, offset.dy), //
-      child: Stack(
-        fit: StackFit.loose,
-        overflow: Overflow.visible,
-        children: <Widget>[
-          Positioned(
-            child: Transform.translate(
-              offset: Offset.zero,
-              child: Container(
-                // duration: Duration(milliseconds: 200),
-                // width: _ballonWidth != null &&  _ballonWidth > (widget.minWidth?? 20.0)? _ballonWidth : (widget.minWidth?? 20.0),
-                // height: _ballonHeight != null && _ballonHeight > (widget.minHeight?? 20.0)? _ballonHeight : (widget.minHeight?? 20.0),
-                alignment: AlignmentDirectional.bottomStart,
-                // color: Colors.red,
-                child: balloon,
+    return Stack(
+      children: <Widget>[
+        CompositedTransformFollower(
+          link: widget.link,
+          showWhenUnlinked: false,
+          offset: tipTarget.translate(offset.dx, offset.dy), //
+          child: Stack(
+            fit: StackFit.loose,
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Positioned(
+                child: Transform.translate(
+                  offset: Offset.zero,
+                  child: Container(
+                    // duration: Duration(milliseconds: 200),
+                    // width: _ballonWidth != null &&  _ballonWidth > (widget.minWidth?? 20.0)? _ballonWidth : (widget.minWidth?? 20.0),
+                    // height: _ballonHeight != null && _ballonHeight > (widget.minHeight?? 20.0)? _ballonHeight : (widget.minHeight?? 20.0),
+                    alignment: AlignmentDirectional.bottomStart,
+                    // color: Colors.red,
+                    child: balloon,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -188,12 +192,10 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     Offset centerPosition = Offset(-halfW, -halfH);
     // final xMin = outsidePadding + halfW;
     if (widget.tooltipDirection == TooltipDirection.up) {
-      final double yOffset =
-          -halfH - widget.arrowLength - widget.arrowTipDistance;
+      final double yOffset = -halfH - widget.arrowLength - widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(0, yOffset);
       final maxXOffset = overlay.size.width;
-      final globalBalloonRightBoundingOffset =
-          globalTipTarget.dx + ballonOffset.dx + childSize.width;
+      final globalBalloonRightBoundingOffset = globalTipTarget.dx + ballonOffset.dx + childSize.width;
       if (globalBalloonRightBoundingOffset > maxXOffset) {
         ballonOffset = ballonOffset.translate(
           maxXOffset - globalBalloonRightBoundingOffset - widget.outsidePadding,
@@ -201,8 +203,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         );
       }
       final minXOffset = 0;
-      final globalBalloonLeftBoundingOffset =
-          globalTipTarget.dx + ballonOffset.dx;
+      final globalBalloonLeftBoundingOffset = globalTipTarget.dx + ballonOffset.dx;
       if (globalBalloonLeftBoundingOffset < minXOffset) {
         ballonOffset = ballonOffset.translate(
           minXOffset - globalBalloonLeftBoundingOffset + widget.outsidePadding,
@@ -210,16 +211,13 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         );
       }
     } else if (widget.tooltipDirection == TooltipDirection.down) {
-      final double yOffset =
-          halfH + widget.arrowLength + widget.arrowTipDistance;
+      final double yOffset = halfH + widget.arrowLength + widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(0, yOffset);
     } else if (widget.tooltipDirection == TooltipDirection.right) {
-      final double xOffset =
-          halfW + widget.arrowLength + widget.arrowTipDistance;
+      final double xOffset = halfW + widget.arrowLength + widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
       final maxXOffset = overlay.size.width;
-      final globalBalloonRightBoundingOffset =
-          globalTipTarget.dx + ballonOffset.dx + childSize.width;
+      final globalBalloonRightBoundingOffset = globalTipTarget.dx + ballonOffset.dx + childSize.width;
       if (globalBalloonRightBoundingOffset > maxXOffset) {
         ballonOffset = ballonOffset.translate(
           maxXOffset - globalBalloonRightBoundingOffset - widget.outsidePadding,
@@ -227,12 +225,10 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         );
       }
     } else if (widget.tooltipDirection == TooltipDirection.left) {
-      final double xOffset =
-          -halfW - widget.arrowLength - widget.arrowTipDistance;
+      final double xOffset = -halfW - widget.arrowLength - widget.arrowTipDistance;
       ballonOffset = centerPosition.translate(xOffset, 0);
       final minXOffset = 0;
-      final globalBalloonLeftBoundingOffset =
-          globalTipTarget.dx + ballonOffset.dx;
+      final globalBalloonLeftBoundingOffset = globalTipTarget.dx + ballonOffset.dx;
       if (globalBalloonLeftBoundingOffset < minXOffset) {
         ballonOffset = ballonOffset.translate(
           minXOffset - globalBalloonLeftBoundingOffset + widget.outsidePadding,
@@ -271,8 +267,7 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   bool shouldRelayout(_PopupBallonLayoutDelegate oldDelegate) {
-    return oldDelegate?.tipTarget?.dx != tipTarget?.dx ||
-        oldDelegate?.tipTarget?.dy != tipTarget?.dy;
+    return oldDelegate?.tipTarget?.dx != tipTarget?.dx || oldDelegate?.tipTarget?.dy != tipTarget?.dy;
   }
 
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -281,8 +276,7 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
     double minWidth = this.minWidth ?? constraints.minWidth;
     double minHeight = this.minHeight ?? constraints.minHeight;
 
-    if (tooltipDirection == TooltipDirection.up ||
-        tooltipDirection == TooltipDirection.down) {
+    if (tooltipDirection == TooltipDirection.up || tooltipDirection == TooltipDirection.down) {
       maxWidth = max(
         min(
           (constraints.maxWidth - tipTarget.dx).abs() * 2 - outsidePadding,
@@ -296,10 +290,7 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
       );
     } else if (tooltipDirection == TooltipDirection.right) {
       maxWidth = max(
-        (constraints.maxWidth - tipTarget.dx).abs() -
-            outsidePadding -
-            arrowLength -
-            arrowTipDistance,
+        (constraints.maxWidth - tipTarget.dx).abs() - outsidePadding - arrowLength - arrowTipDistance,
         0,
       );
       maxHeight = max(
@@ -310,10 +301,7 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
       maxWidth = max(
           min(
             tipTarget.dx >= constraints.maxWidth
-                ? (constraints.maxWidth - tipTarget.dx).abs() -
-                    outsidePadding -
-                    arrowLength -
-                    arrowTipDistance
+                ? (constraints.maxWidth - tipTarget.dx).abs() - outsidePadding - arrowLength - arrowTipDistance
                 : maxWidth,
             // (constraints.maxWidth - tipTarget.dx).abs() - outsidePadding - arrowLength - arrowTipDistance,
             tipTarget.dx - (outsidePadding * 2) - arrowTipDistance,

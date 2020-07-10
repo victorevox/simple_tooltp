@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:simple_tooltip/simple_tooltip.dart';
 
 import 'types.dart';
 
@@ -102,8 +103,7 @@ class SimpleTooltip extends StatefulWidget {
     @required this.content,
     @required this.show,
     this.onClose,
-    this.ballonPadding =
-        const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
     this.minWidth,
     this.maxHeight,
@@ -118,8 +118,7 @@ class SimpleTooltip extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 460),
     this.backgroundColor = const Color(0xFFFFFFFF),
     this.customShadows = const [
-      const BoxShadow(
-          color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
+      const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
     ],
     this.tooltipTap,
     this.hideOnTooltipTap = false,
@@ -128,13 +127,15 @@ class SimpleTooltip extends StatefulWidget {
         super(key: key);
 
   @override
-  _SimpleTooltipState createState() => _SimpleTooltipState();
+  SimpleTooltipState createState() => SimpleTooltipState();
 }
 
-class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
+class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   bool _displaying = false;
 
   final LayerLink layerLink = LayerLink();
+
+  bool get shouldShowTooltip => widget.show && !_isBeingObfuscated && _routeIsShowing;
 
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
@@ -142,7 +143,28 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   bool _routeIsShowing = true;
 
-  OverlayEntry overlayEntry;
+  bool _isBeingObfuscated = false;
+
+  OverlayEntry _overlayEntry;
+
+  List<ObfuscateTooltipItemState> _obfuscateItems = [];
+  _BallonSize _ballonSize;
+
+  addObfuscateItem(ObfuscateTooltipItemState item) {
+    _obfuscateItems.add(item);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      doCheckForObfuscation();
+      doShowOrHide();
+    });
+  }
+
+  removeObsfuscateItem(ObfuscateTooltipItemState item) {
+    _obfuscateItems.remove(item);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      doCheckForObfuscation();
+      doShowOrHide();
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -161,7 +183,7 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.show) {
+      if (shouldShowTooltip) {
         _showTooltip();
       }
       widget.routeObserver?.subscribe(this, ModalRoute.of(context));
@@ -175,21 +197,13 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
       widget.routeObserver?.subscribe(this, ModalRoute.of(context));
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (oldWidget.tooltipDirection != widget.tooltipDirection ||
-          (oldWidget.show != widget.show && widget.show)) {
+      if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
-      if(!_routeIsShowing) {
+      if (!_routeIsShowing || _isBeingObfuscated) {
         return;
       }
-      _removeTooltip();
-      if (widget.show) {
-        _showTooltip();
-      } else if (oldWidget.show) {
-        _showTooltip(buildHidding: true);
-        // setState(() {
-        // });
-      }
+      doShowOrHide();
     });
     super.didUpdateWidget(oldWidget);
   }
@@ -208,23 +222,49 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     if (_displaying || !mounted) {
       return;
     }
-    overlayEntry = _buildOverlay(
+    _overlayEntry = _buildOverlay(
       buildHidding: buildHidding,
     );
-    Overlay.of(context, rootOverlay: false).insert(overlayEntry);
+    Overlay.of(context, rootOverlay: false).insert(_overlayEntry);
     _displaying = true;
   }
-
-  // void _hideToolTip() {
-  //   _hide = true;
-  // }
 
   void _removeTooltip() {
     if (!_displaying) {
       return;
     }
-    this.overlayEntry.remove();
+    this._overlayEntry.remove();
     _displaying = false;
+  }
+
+  doShowOrHide() {
+    final wasDisplaying = _displaying;
+    _removeTooltip();
+    if (shouldShowTooltip) {
+      _showTooltip();
+    } else if (wasDisplaying) {
+      _showTooltip(buildHidding: true);
+    }
+  }
+
+  doCheckForObfuscation() {
+    if (_ballonSize == null) return;
+    for (var obfuscateItem in _obfuscateItems) {
+      final d = obfuscateItem.getPositionAndSize();
+      // final obfuscateItemSize = d.size;
+      // final obfuscateItemPosition = d.globalPosition;
+      // final ballonSize = _ballonSize.size;
+      // final balloPosition = _ballonSize.globalPosition;
+      final Rect obfuscateItemRect = d.globalPosition & d.size;
+      final Rect ballonRect = _ballonSize.globalPosition & _ballonSize.size;
+      final bool overlaps = ballonRect.overlaps(obfuscateItemRect);
+      if (overlaps) {
+        _isBeingObfuscated = true;
+        // no need to keep searching
+        return;
+      }
+    }
+    _isBeingObfuscated = false;
   }
 
   OverlayEntry _buildOverlay({
@@ -271,6 +311,12 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
                   widget.tooltipTap();
                 }
               },
+              onSizeChange: (ballonSize) {
+                if (!mounted) return;
+                _ballonSize = ballonSize;
+                doCheckForObfuscation();
+                doShowOrHide();
+              },
             ),
           ),
           // arrowBaseWidth: widget.arrowBaseWidth,
@@ -287,9 +333,12 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   void didPush() {
     _routeIsShowing = true;
     // Route was pushed onto navigator and is now topmost route.
-    if (widget.show) {
+    if (shouldShowTooltip) {
       _removeTooltip();
-      _showTooltip();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (!mounted) return;
+        _showTooltip();
+      });
     }
   }
 
@@ -302,11 +351,11 @@ class _SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   @override
   void didPopNext() async {
     _routeIsShowing = true;
-    if (widget.show) {
+    if (shouldShowTooltip) {
+      // Covering route was popped off the navigator.
       _removeTooltip();
       await Future.delayed(Duration(milliseconds: 100));
-      _showTooltip();
+      if (mounted) _showTooltip();
     }
-    // Covering route was popped off the navigator.
   }
 }

@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:example/basics_example_page.dart';
+
+import 'package:example/obfuscate_example_page.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_tooltip/simple_tooltip.dart';
 import 'animated_example_page.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
@@ -75,8 +74,7 @@ class OptionsPage extends StatelessWidget {
                 child: Text("Animated example"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) =>
-                        AnimatedExamplePage(title: 'Flutter Demo Home Page'),
+                    builder: (ctx) => AnimatedExamplePage(title: 'Flutter Demo Home Page'),
                   ));
                 },
               ),
@@ -85,6 +83,14 @@ class OptionsPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (ctx) => BasicsExamplePage(),
+                  ));
+                },
+              ),
+              RaisedButton(
+                child: Text("Obfuscate"),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => ObfuscateExamplePage(),
                   ));
                 },
               ),

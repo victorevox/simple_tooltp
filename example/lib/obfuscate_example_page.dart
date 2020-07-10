@@ -2,18 +2,19 @@ import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
-class BasicsExamplePage extends StatefulWidget {
-  const BasicsExamplePage({Key key}) : super(key: key);
+class ObfuscateExamplePage extends StatefulWidget {
+  const ObfuscateExamplePage({Key key}) : super(key: key);
 
   @override
-  _BasicsExamplePageState createState() => _BasicsExamplePageState();
+  _ObfuscateExamplePageState createState() => _ObfuscateExamplePageState();
 }
 
-class _BasicsExamplePageState extends State<BasicsExamplePage> {
+class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
   bool _show = false;
-  bool hideOnTap = false;
+  // bool hideOnTap = false;
   TooltipDirection _direction = TooltipDirection.down;
-  bool _changeBorder = false;
+  // bool _changeBorder = false;
+  GlobalKey<SimpleTooltipState> _exampleTooltipKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -56,28 +57,43 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                 },
               ),
               RaisedButton(
-                child: Text("hideOnTap: $hideOnTap"),
+                child: Text("Show Dialog"),
                 onPressed: () {
-                  setState(() {
-                    hideOnTap = !hideOnTap;
-                  });
-                },
-              ),
-              RaisedButton(
-                child: Text("change border: $hideOnTap"),
-                onPressed: () {
-                  setState(() {
-                    _changeBorder = !_changeBorder;
-                  });
+                  showGeneralDialog(
+                    context: context,
+                    transitionDuration: Duration(milliseconds: 400),
+                    barrierDismissible: true,
+                    barrierLabel: "label",
+                    pageBuilder: (context, a1, a2) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ObfuscateTooltipItem(
+                            tooltipKeys: [_exampleTooltipKey],
+                            child: Container(
+                              height: 100,
+                              width: 300,
+                              // constraints: BoxConstraints(maxHeight: 300),
+                              child: Card(
+                                child: Text("Hello"),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
               Align(
                 alignment: AlignmentDirectional.center,
                 child: SimpleTooltip(
+                  key: _exampleTooltipKey,
                   show: _show,
                   tooltipDirection: _direction,
-                  hideOnTooltipTap: hideOnTap,
-                  borderWidth: _changeBorder ? 0 : 3,
+                  // hideOnTooltipTap: hideOnTap,
+                  // borderWidth: _changeBorder ? 0 : 3,
                   child: Container(
                     color: Colors.cyan,
                     width: 80,
@@ -91,21 +107,6 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   ),
                   routeObserver: MyApp.of(context).routeObserver,
                 ),
-              ),
-              RaisedButton(
-                child: Text("New route"),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) {
-                        return Scaffold(
-                          appBar: AppBar(),
-                          body: Placeholder(),
-                        );
-                      },
-                    ),
-                  );
-                },
               ),
             ],
           ),
