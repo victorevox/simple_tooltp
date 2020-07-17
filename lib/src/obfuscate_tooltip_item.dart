@@ -79,7 +79,7 @@ class ObfuscateTooltipItemState extends State<ObfuscateTooltipItem> with Widgets
   _PositionAndSize getPositionAndSize() {
     if (!mounted) return null;
     final RenderBox renderBox = _key.currentContext?.findRenderObject();
-    if (renderBox == null) return null;
+    if (renderBox == null || !renderBox.attached) return null;
     final position = renderBox.localToGlobal(Offset.zero);
     return _PositionAndSize(
       context: context,
