@@ -1,3 +1,13 @@
+## [0.1.14] - 05/08/20.
+
+* Bug fixes - 
+    ```
+    Failed assertion: line 1705 pos 18: 'debugDoingThisResize
+    flutter: || debugDoingThisLayout ||
+    flutter:                  (RenderObject.debugActiveLayout == parent && _size._canBeUsedByParent)': is not
+    flutter: true.
+    ```
+
 ## [0.1.13] - 17/07/20.
 
 * Bug fixes - Render box not attached error

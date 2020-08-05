@@ -77,21 +77,25 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     }
     final RenderBox overlay = cOverlay.context.findRenderObject();
 
-    if (renderBox == null || overlay == null) {
+    if (renderBox == null || overlay == null || renderBox.hasSize == false) {
       return Container();
     }
 
     Offset tipTarget;
 
     final Offset zeroOffset = Offset.zero;
-    if (widget.tooltipDirection == TooltipDirection.up) {
-      tipTarget = renderBox.size.topCenter(zeroOffset);
-    } else if (widget.tooltipDirection == TooltipDirection.down) {
-      tipTarget = renderBox.size.bottomCenter(zeroOffset);
-    } else if (widget.tooltipDirection == TooltipDirection.right) {
-      tipTarget = renderBox.size.centerRight(zeroOffset);
-    } else if (widget.tooltipDirection == TooltipDirection.left) {
-      tipTarget = renderBox.size.centerLeft(zeroOffset);
+    try {
+      if (widget.tooltipDirection == TooltipDirection.up) {
+        tipTarget = renderBox.size.topCenter(zeroOffset);
+      } else if (widget.tooltipDirection == TooltipDirection.down) {
+        tipTarget = renderBox.size.bottomCenter(zeroOffset);
+      } else if (widget.tooltipDirection == TooltipDirection.right) {
+        tipTarget = renderBox.size.centerRight(zeroOffset);
+      } else if (widget.tooltipDirection == TooltipDirection.left) {
+        tipTarget = renderBox.size.centerLeft(zeroOffset);
+      }
+    } catch (e) {
+      return Container();
     }
 
     final globalTipTarget = renderBox.localToGlobal(
