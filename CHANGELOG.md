@@ -1,3 +1,10 @@
+## [0.1.15] - 04/11/20.
+
+* Disabled onClose callback, as not implemented for the time being
+* Merge pull request #19 from denisbabineau/master
+    
+    add horizontal / vertical TooltipDirection
+
 ## [0.1.14] - 05/08/20.
 
 * Bug fixes - 
