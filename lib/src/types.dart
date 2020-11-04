@@ -1,1 +1,1 @@
-enum TooltipDirection { up, down, right, left }
+enum TooltipDirection { up, down, right, left, horizontal, vertical }
