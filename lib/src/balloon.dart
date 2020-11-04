@@ -61,11 +61,13 @@ class __BallonState extends State<_Ballon> {
       // print("position : ${position.dx},${position.dy}, Size: ${renderBox.size}");
 
       if (_lastSizeNotified == null || _lastSizeNotified.size != size || _lastSizeNotified.globalPosition != position) {
-        widget.onSizeChange?.call(_BallonSize(
+        final ballonSize = _BallonSize(
           size: size,
           globalPosition: position,
           context: context,
-        ));
+        );
+        widget.onSizeChange?.call(ballonSize);
+        _lastSizeNotified = ballonSize;
       }
     });
     return GestureDetector(

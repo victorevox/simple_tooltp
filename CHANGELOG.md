@@ -1,3 +1,7 @@
+## [0.1.16] - 04/11/20.
+
+* Fixed performance issues https://github.com/victorevox/simple_tooltp/issues/17 
+
 ## [0.1.15] - 04/11/20.
 
 * Disabled onClose callback, as not implemented for the time being
