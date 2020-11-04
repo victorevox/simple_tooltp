@@ -63,8 +63,6 @@ SimpleTooltip(
   /// If true, it will display the tool , if false it will hide it
   final bool show;
 
-  final Function onClose;
-
   /// Sets the content padding
   /// defautls to: `const EdgeInsets.symmetric(horizontal: 20, vertical: 16),`
   final EdgeInsets ballonPadding;

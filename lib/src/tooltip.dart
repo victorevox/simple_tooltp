@@ -27,7 +27,8 @@ class SimpleTooltip extends StatefulWidget {
   /// If true, it will display the tool , if false it will hide it
   final bool show;
 
-  final Function onClose;
+  // TODO: Implement on close callback
+  // final Function onClose;
 
   /// Sets the content padding
   /// defautls to: `const EdgeInsets.symmetric(horizontal: 20, vertical: 16),`
@@ -102,7 +103,7 @@ class SimpleTooltip extends StatefulWidget {
     this.tooltipDirection = TooltipDirection.up,
     @required this.content,
     @required this.show,
-    this.onClose,
+    // this.onClose,
     this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
     this.minWidth,
