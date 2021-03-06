@@ -78,7 +78,7 @@ class _BalloonTransitionState extends State<_BalloonTransition>
             child: widget.child,
             // transform: Matrix4.identity()..setEntry(1, 2, _rotationAnimation.value),
             alignment: _ballonTransformation.alignment,
-            transform: _ballonTransformation.transformation!,
+            transform: _ballonTransformation.transformation,
           );
         },
       ),
@@ -93,8 +93,8 @@ class _BalloonTransitionState extends State<_BalloonTransition>
 }
 
 class _BallonTransformation {
-  final Matrix4? transformation;
-  final FractionalOffset? alignment;
+  final Matrix4 transformation;
+  final FractionalOffset alignment;
 
   _BallonTransformation({
     required this.transformation,
@@ -103,8 +103,9 @@ class _BallonTransformation {
 
   static _BallonTransformation forAnimationValue(
       double value, TooltipDirection tooltipDirection) {
-    Matrix4? transformation;
-    FractionalOffset? alignment;
+    
+    late Matrix4 transformation;
+    late FractionalOffset alignment;
     if (tooltipDirection == TooltipDirection.up) {
       transformation = Matrix4.rotationX(value);
       alignment = FractionalOffset.bottomCenter;
