@@ -17,7 +17,7 @@ class _Ballon extends StatefulWidget {
   final EdgeInsets ballonPadding;
   final Color backgroundColor;
   final List<BoxShadow> shadows;
-  final Function? onTap;
+  final GestureTapCallback? onTap;
   final Function(_BallonSize) onSizeChange;
 
   const _Ballon({
@@ -66,13 +66,13 @@ class __BallonState extends State<_Ballon> {
           globalPosition: position,
           context: context,
         );
-        widget.onSizeChange.call(ballonSize);
+        widget.onSizeChange(ballonSize);
         _lastSizeNotified = ballonSize;
       }
     });
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: widget.onTap as void Function()?,
+      onTap: widget.onTap,
       child: Container(
         key: _containerKey,
         decoration: ShapeDecoration(
