@@ -39,11 +39,11 @@ class SimpleTooltip extends StatefulWidget {
   final Duration animationDuration;
 
   /// [top], [right], [bottom], [left] position the Tooltip absolute relative to the whole screen
-  double top, right, bottom, left;
+  double? top, right, bottom, left;
 
   /// [minWidth], [minHeight], [maxWidth], [maxHeight] optional size constraints.
   /// If a constraint is not set the size will ajust to the content
-  double minWidth, minHeight, maxWidth, maxHeight;
+  double? minWidth, minHeight, maxWidth, maxHeight;
 
   ///
   /// The distance of the tip of the arrow's tip to the center of the target
@@ -84,7 +84,7 @@ class SimpleTooltip extends StatefulWidget {
 
   ///
   /// Set a handler for listening to a `tap` event on the tooltip (This is the recommended way to put your logic for dismissing the tooltip)
-  final Function() tooltipTap;
+  final Function()? tooltipTap;
 
   ///
   /// If you want to automatically dismiss the tooltip whenever a user taps on it, set this flag to [true]
@@ -95,14 +95,14 @@ class SimpleTooltip extends StatefulWidget {
   ///
   /// Pass a `RouteObserver` so that the widget will listen for route transition and will hide tooltip when
   /// the widget's route is not active
-  final RouteObserver<PageRoute> routeObserver;
+  final RouteObserver<PageRoute>? routeObserver;
 
   SimpleTooltip({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.tooltipDirection = TooltipDirection.up,
-    @required this.content,
-    @required this.show,
+    required this.content,
+    required this.show,
     // this.onClose,
     this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
@@ -146,14 +146,14 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   bool _isBeingObfuscated = false;
 
-  OverlayEntry _overlayEntry;
+  late OverlayEntry _overlayEntry;
 
   List<ObfuscateTooltipItemState> _obfuscateItems = [];
-  _BallonSize _ballonSize;
+  _BallonSize? _ballonSize;
 
   addObfuscateItem(ObfuscateTooltipItemState item) {
     _obfuscateItems.add(item);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       doCheckForObfuscation();
       doShowOrHide();
     });
@@ -161,7 +161,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   removeObsfuscateItem(ObfuscateTooltipItemState item) {
     _obfuscateItems.remove(item);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       doCheckForObfuscation();
       doShowOrHide();
     });
@@ -183,11 +183,11 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (shouldShowTooltip) {
         _showTooltip();
       }
-      widget.routeObserver?.subscribe(this, ModalRoute.of(context));
+      widget.routeObserver?.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     });
   }
 
@@ -195,9 +195,9 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   void didUpdateWidget(SimpleTooltip oldWidget) {
     if (oldWidget.routeObserver != widget.routeObserver) {
       oldWidget.routeObserver?.unsubscribe(this);
-      widget.routeObserver?.subscribe(this, ModalRoute.of(context));
+      widget.routeObserver?.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
@@ -226,7 +226,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     _overlayEntry = _buildOverlay(
       buildHidding: buildHidding,
     );
-    Overlay.of(context, rootOverlay: false).insert(_overlayEntry);
+    Overlay.of(context, rootOverlay: false)!.insert(_overlayEntry);
     _displaying = true;
   }
 
@@ -251,13 +251,13 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   doCheckForObfuscation() {
     if (_ballonSize == null) return;
     for (var obfuscateItem in _obfuscateItems) {
-      final d = obfuscateItem.getPositionAndSize();
+      final d = obfuscateItem.getPositionAndSize()!;
       // final obfuscateItemSize = d.size;
       // final obfuscateItemPosition = d.globalPosition;
       // final ballonSize = _ballonSize.size;
       // final balloPosition = _ballonSize.globalPosition;
       final Rect obfuscateItemRect = d.globalPosition & d.size;
-      final Rect ballonRect = _ballonSize.globalPosition & _ballonSize.size;
+      final Rect ballonRect = _ballonSize!.globalPosition & _ballonSize!.size;
       final bool overlaps = ballonRect.overlaps(obfuscateItemRect);
       if (overlaps) {
         _isBeingObfuscated = true;
@@ -277,9 +277,9 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
         direction == TooltipDirection.vertical) {
       // compute real direction based on target position
       final targetRenderBox = context.findRenderObject() as RenderBox;
-      final overlayRenderBox = Overlay.of(context, rootOverlay: false)
+      final overlayRenderBox = Overlay.of(context, rootOverlay: false)!
           .context
-          .findRenderObject() as RenderBox;
+          .findRenderObject() as RenderBox?;
 
       final targetGlobalCenter = targetRenderBox.localToGlobal(
           targetRenderBox.size.center(Offset.zero),
@@ -287,11 +287,11 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
       direction = (direction == TooltipDirection.vertical)
           ? (targetGlobalCenter.dy <
-                  overlayRenderBox.size.center(Offset.zero).dy
+                  overlayRenderBox!.size.center(Offset.zero).dy
               ? TooltipDirection.down
               : TooltipDirection.up)
           : (targetGlobalCenter.dx <
-                  overlayRenderBox.size.center(Offset.zero).dx
+                  overlayRenderBox!.size.center(Offset.zero).dx
               ? TooltipDirection.right
               : TooltipDirection.left);
     }
@@ -334,7 +334,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
                   _showTooltip(buildHidding: true);
                 }
                 if (widget.tooltipTap != null) {
-                  widget.tooltipTap();
+                  widget.tooltipTap!();
                 }
               },
               onSizeChange: (ballonSize) {
@@ -361,7 +361,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     // Route was pushed onto navigator and is now topmost route.
     if (shouldShowTooltip) {
       _removeTooltip();
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         if (!mounted) return;
         _showTooltip();
       });

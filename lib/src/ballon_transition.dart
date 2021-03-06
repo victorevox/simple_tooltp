@@ -5,13 +5,13 @@ class _BalloonTransition extends StatefulWidget {
   final Duration duration;
   final TooltipDirection tooltipDirection;
   final bool hide;
-  final Function(AnimationStatus) animationEnd;
+  final Function(AnimationStatus)? animationEnd;
 
   _BalloonTransition({
-    Key key,
-    @required this.child,
-    @required this.duration,
-    @required this.tooltipDirection,
+    Key? key,
+    required this.child,
+    required this.duration,
+    required this.tooltipDirection,
     this.hide = false,
     this.animationEnd,
   }) : super(key: key);
@@ -22,8 +22,8 @@ class _BalloonTransition extends StatefulWidget {
 
 class _BalloonTransitionState extends State<_BalloonTransition>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _rotationAnimation;
+  late AnimationController _animationController;
+  late Animation<double> _rotationAnimation;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _BalloonTransitionState extends State<_BalloonTransition>
       if ((status == AnimationStatus.completed ||
               status == AnimationStatus.dismissed) &&
           widget.animationEnd != null) {
-        widget.animationEnd(status);
+        widget.animationEnd!(status);
       }
     });
   }
@@ -78,7 +78,7 @@ class _BalloonTransitionState extends State<_BalloonTransition>
             child: widget.child,
             // transform: Matrix4.identity()..setEntry(1, 2, _rotationAnimation.value),
             alignment: _ballonTransformation.alignment,
-            transform: _ballonTransformation.transformation,
+            transform: _ballonTransformation.transformation!,
           );
         },
       ),
@@ -93,18 +93,18 @@ class _BalloonTransitionState extends State<_BalloonTransition>
 }
 
 class _BallonTransformation {
-  final Matrix4 transformation;
-  final FractionalOffset alignment;
+  final Matrix4? transformation;
+  final FractionalOffset? alignment;
 
   _BallonTransformation({
-    @required this.transformation,
-    @required this.alignment,
+    required this.transformation,
+    required this.alignment,
   });
 
   static _BallonTransformation forAnimationValue(
       double value, TooltipDirection tooltipDirection) {
-    Matrix4 transformation;
-    FractionalOffset alignment;
+    Matrix4? transformation;
+    FractionalOffset? alignment;
     if (tooltipDirection == TooltipDirection.up) {
       transformation = Matrix4.rotationX(value);
       alignment = FractionalOffset.bottomCenter;
@@ -128,9 +128,9 @@ class _BallonTransformation {
 class _OpacityAnimationWrapper extends StatefulWidget {
   final Duration duration;
   const _OpacityAnimationWrapper({
-    Key key,
-    @required this.child,
-    @required this.duration,
+    Key? key,
+    required this.child,
+    required this.duration,
   }) : super(key: key);
 
   final Widget child;
@@ -146,7 +146,7 @@ class __OpacityAnimationWrapperState extends State<_OpacityAnimationWrapper> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       if (mounted) {
         setState(() {
           _opacity = 1;
