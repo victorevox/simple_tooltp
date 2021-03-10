@@ -70,6 +70,10 @@ class SimpleTooltip extends StatefulWidget {
   final double arrowBaseWidth;
 
   ///
+  /// The targetCenter where the arrow points to(if null,defaults to center)
+  final Offset targetCenter;
+
+  ///
   /// The color of the border
   final Color borderColor;
 
@@ -103,6 +107,7 @@ class SimpleTooltip extends StatefulWidget {
     this.tooltipDirection = TooltipDirection.up,
     @required this.content,
     @required this.show,
+    this.targetCenter,
     // this.onClose,
     this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
@@ -321,6 +326,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
               borderRadius: widget.borderRadius,
               arrowBaseWidth: widget.arrowBaseWidth,
               arrowLength: widget.arrowLength,
+              targetCenter: widget.targetCenter,
               arrowTipDistance: widget.arrowTipDistance,
               ballonPadding: widget.ballonPadding,
               borderColor: widget.borderColor,
