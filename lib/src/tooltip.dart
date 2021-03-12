@@ -70,6 +70,10 @@ class SimpleTooltip extends StatefulWidget {
   final double arrowBaseWidth;
 
   ///
+  /// The targetCenter where the arrow points to(if null,defaults to center)
+  final Offset targetCenter;
+
+  ///
   /// The color of the border
   final Color borderColor;
 
@@ -103,8 +107,10 @@ class SimpleTooltip extends StatefulWidget {
     this.tooltipDirection = TooltipDirection.up,
     @required this.content,
     @required this.show,
+    this.targetCenter,
     // this.onClose,
-    this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    this.ballonPadding =
+        const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
     this.minWidth,
     this.maxHeight,
@@ -119,7 +125,8 @@ class SimpleTooltip extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 460),
     this.backgroundColor = const Color(0xFFFFFFFF),
     this.customShadows = const [
-      const BoxShadow(color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
+      const BoxShadow(
+          color: const Color(0x45222222), blurRadius: 8, spreadRadius: 2),
     ],
     this.tooltipTap,
     this.hideOnTooltipTap = false,
@@ -136,7 +143,8 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   final LayerLink layerLink = LayerLink();
 
-  bool get shouldShowTooltip => widget.show && !_isBeingObfuscated && _routeIsShowing;
+  bool get shouldShowTooltip =>
+      widget.show && !_isBeingObfuscated && _routeIsShowing;
 
   // To avoid rebuild state of widget for each rebuild
   GlobalKey _transitionKey = GlobalKey();
@@ -198,7 +206,8 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
       widget.routeObserver?.subscribe(this, ModalRoute.of(context));
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
+      if (oldWidget.tooltipDirection != widget.tooltipDirection ||
+          (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
       if (!_routeIsShowing || _isBeingObfuscated) {
@@ -321,6 +330,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
               borderRadius: widget.borderRadius,
               arrowBaseWidth: widget.arrowBaseWidth,
               arrowLength: widget.arrowLength,
+              targetCenter: widget.targetCenter,
               arrowTipDistance: widget.arrowTipDistance,
               ballonPadding: widget.ballonPadding,
               borderColor: widget.borderColor,
