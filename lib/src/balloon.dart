@@ -18,7 +18,7 @@ class _Balloon extends StatefulWidget {
   final Color backgroundColor;
   final List<BoxShadow> shadows;
   final VoidCallback? onTap;
-  final Function(_BallonSize) onSizeChange;
+  final Function(_BalloonSize) onSizeChange;
 
   const _Balloon({
     Key? key,
@@ -47,7 +47,7 @@ class _Balloon extends StatefulWidget {
 }
 
 class _BalloonState extends State<_Balloon> {
-  _BallonSize? _lastSizeNotified;
+  _BalloonSize? _lastSizeNotified;
 
   GlobalKey _containerKey = GlobalKey();
 
@@ -65,7 +65,7 @@ class _BalloonState extends State<_Balloon> {
       if (_lastSizeNotified == null ||
           _lastSizeNotified!.size != size ||
           _lastSizeNotified!.globalPosition != position) {
-        final ballonSize = _BallonSize(
+        final ballonSize = _BalloonSize(
           size: size,
           globalPosition: position,
           context: context,
@@ -318,11 +318,11 @@ class _BalloonShape extends ShapeBorder {
   }
 }
 
-class _BallonSize {
+class _BalloonSize {
   final Size size;
   final Offset globalPosition;
   final BuildContext context;
-  _BallonSize({
+  _BalloonSize({
     required this.size,
     required this.globalPosition,
     required this.context,
