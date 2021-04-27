@@ -28,23 +28,23 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  static _MyAppData of(BuildContext context) {
+  static _MyAppData? of(BuildContext context) {
     return _MyAppData.of(context);
   }
 }
 
 class _MyAppData extends InheritedWidget {
-  final RouteObserver<PageRoute> routeObserver;
+  final RouteObserver<PageRoute>? routeObserver;
 
   _MyAppData({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
     this.routeObserver,
   }) : super(key: key, child: child);
 
   final Widget child;
 
-  static _MyAppData of(BuildContext context) {
+  static _MyAppData? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<_MyAppData>();
   }
 
@@ -55,7 +55,7 @@ class _MyAppData extends InheritedWidget {
 }
 
 class OptionsPage extends StatelessWidget {
-  const OptionsPage({Key key}) : super(key: key);
+  const OptionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +70,16 @@ class OptionsPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Animated example"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => AnimatedExamplePage(title: 'Flutter Demo Home Page'),
+                    builder: (ctx) =>
+                        AnimatedExamplePage(title: 'Flutter Demo Home Page'),
                   ));
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Basics"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -86,7 +87,7 @@ class OptionsPage extends StatelessWidget {
                   ));
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Obfuscate"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(

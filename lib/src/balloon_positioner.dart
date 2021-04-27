@@ -1,6 +1,6 @@
 part of tooltip;
 
-class _BallonPositioner extends StatefulWidget {
+class _BalloonPositioner extends StatefulWidget {
   final BuildContext context;
   final TooltipDirection tooltipDirection;
   // final Offset targetCenter;
@@ -15,38 +15,36 @@ class _BallonPositioner extends StatefulWidget {
   // final double right;
   // final double bottom;
   final Widget child;
-  final double maxWidth;
-  final double maxHeight;
-  final double minWidth;
-  final double minHeight;
+  final double? maxWidth;
+  final double? maxHeight;
+  final double? minWidth;
+  final double? minHeight;
   final double outsidePadding;
   final LayerLink link;
 
-  const _BallonPositioner({
-    Key key,
-    @required this.tooltipDirection,
-    @required this.arrowTipDistance,
-    @required this.arrowLength,
-    // @required this.arrowBaseWidth,
-    @required this.child,
-    @required this.maxWidth,
-    @required this.maxHeight,
-    @required this.minWidth,
-    @required this.minHeight,
-    @required this.outsidePadding,
-    @required this.link,
-    @required this.context,
+  const _BalloonPositioner({
+    Key? key,
+    required this.tooltipDirection,
+    required this.arrowTipDistance,
+    required this.arrowLength,
+    // required this.arrowBaseWidth,
+    required this.child,
+    required this.maxWidth,
+    required this.maxHeight,
+    required this.minWidth,
+    required this.minHeight,
+    required this.outsidePadding,
+    required this.link,
+    required this.context,
   }) : super(key: key);
 
   @override
-  __BallonPositionerState createState() => __BallonPositionerState();
+  _BalloonPositionerState createState() => _BalloonPositionerState();
 }
 
-class __BallonPositionerState extends State<_BallonPositioner> {
-  GlobalKey _ballonKey = GlobalKey();
-  double _ballonWidth;
-  double _ballonHeight;
-  Size _ballonSize;
+class _BalloonPositionerState extends State<_BalloonPositioner> {
+  GlobalKey _balloonKey = GlobalKey();
+  Size? _balloonSize;
 
   @override
   void initState() {
@@ -54,34 +52,31 @@ class __BallonPositionerState extends State<_BallonPositioner> {
   }
 
   @override
-  void didUpdateWidget(_BallonPositioner oldWidget) {
+  void didUpdateWidget(_BalloonPositioner oldWidget) {
     if (widget.tooltipDirection != oldWidget.tooltipDirection) {
-      // invalidate ballon size to perform recalculation
-      _ballonSize = null;
+      // invalidate balloon size to perform recalculation
+      _balloonSize = null;
     }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext _) {
-    if (widget.context == null) {
-      return Container();
-    }
-    RenderBox renderBox = widget.context.findRenderObject();
+    RenderBox renderBox = widget.context.findRenderObject() as RenderBox;
     if (!renderBox.attached) {
       return Container();
     }
     final cOverlay = Overlay.of(widget.context);
-    if (!cOverlay.mounted) {
+    if (cOverlay == null || !cOverlay.mounted) {
       return Container();
     }
-    final RenderBox overlay = cOverlay.context.findRenderObject();
+    final RenderBox? overlay = cOverlay.context.findRenderObject() as RenderBox?;
 
-    if (renderBox == null || overlay == null || renderBox.hasSize == false) {
+    if (overlay == null || renderBox.hasSize == false) {
       return Container();
     }
 
-    Offset tipTarget;
+    late Offset tipTarget;
 
     final Offset zeroOffset = Offset.zero;
     try {
@@ -103,11 +98,6 @@ class __BallonPositionerState extends State<_BallonPositioner> {
       ancestor: overlay,
     );
 
-    final debugg = renderBox.localToGlobal(
-      renderBox.size.center(zeroOffset),
-      ancestor: overlay,
-    );
-
     final balloon = CustomSingleChildLayout(
       delegate: _PopupBallonLayoutDelegate(
         arrowLength: widget.arrowLength,
@@ -121,12 +111,11 @@ class __BallonPositionerState extends State<_BallonPositioner> {
         outsidePadding: widget.outsidePadding,
       ),
       child: Stack(
-        overflow: Overflow.visible,
-        fit: StackFit.passthrough,
+        clipBehavior: Clip.none, fit: StackFit.passthrough,
         children: <Widget>[
           Positioned(
             child: Container(
-              key: _ballonKey,
+              key: _balloonKey,
               child: widget.child,
             ),
           ),
@@ -134,15 +123,13 @@ class __BallonPositionerState extends State<_BallonPositioner> {
       ),
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ballonContext = _ballonKey.currentContext;
-      if (ballonContext != null) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      final balloonContext = _balloonKey.currentContext;
+      if (balloonContext != null) {
         // final bRenderO = ballonContext.findRenderObject();
-        final ballonSize = ballonContext.size;
-        _ballonWidth = ballonSize.width;
-        _ballonHeight = ballonSize.height;
-        final wasNull = _ballonSize == null;
-        _ballonSize = ballonSize;
+        final balloonSize = balloonContext.size;
+        final wasNull = _balloonSize == null;
+        _balloonSize = balloonSize;
 
         if (wasNull) {
           setState(() {});
@@ -154,7 +141,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
     // double xPosition;
     // double yPosition;
 
-    final offset = getPositionForChild(_ballonSize, overlay, globalTipTarget);
+    final offset = getPositionForChild(_balloonSize, overlay, globalTipTarget);
 
     return Stack(
       children: <Widget>[
@@ -163,8 +150,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
           showWhenUnlinked: false,
           offset: tipTarget.translate(offset.dx, offset.dy), //
           child: Stack(
-            fit: StackFit.loose,
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none, fit: StackFit.loose,
             children: <Widget>[
               Positioned(
                 child: Transform.translate(
@@ -187,7 +173,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
   }
 
   Offset getPositionForChild(
-    Size childSize,
+    Size? childSize,
     RenderBox overlay,
     Offset globalTipTarget,
   ) {
@@ -251,10 +237,10 @@ class __BallonPositionerState extends State<_BallonPositioner> {
 }
 
 class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
-  final double maxWidth;
-  final double maxHeight;
-  final double minWidth;
-  final double minHeight;
+  final double? maxWidth;
+  final double? maxHeight;
+  final double? minWidth;
+  final double? minHeight;
   final TooltipDirection tooltipDirection;
   final double arrowTipDistance;
   final double arrowLength;
@@ -262,20 +248,20 @@ class _PopupBallonLayoutDelegate extends SingleChildLayoutDelegate {
   final double outsidePadding;
 
   _PopupBallonLayoutDelegate({
-    @required this.maxWidth,
-    @required this.maxHeight,
-    @required this.minWidth,
-    @required this.minHeight,
-    @required this.tooltipDirection,
-    @required this.arrowLength,
-    @required this.arrowTipDistance,
-    @required this.tipTarget,
-    @required this.outsidePadding,
+    required this.maxWidth,
+    required this.maxHeight,
+    required this.minWidth,
+    required this.minHeight,
+    required this.tooltipDirection,
+    required this.arrowLength,
+    required this.arrowTipDistance,
+    required this.tipTarget,
+    required this.outsidePadding,
   });
 
   @override
   bool shouldRelayout(_PopupBallonLayoutDelegate oldDelegate) {
-    return oldDelegate?.tipTarget?.dx != tipTarget?.dx || oldDelegate?.tipTarget?.dy != tipTarget?.dy;
+    return oldDelegate.tipTarget.dx != tipTarget.dx || oldDelegate.tipTarget.dy != tipTarget.dy;
   }
 
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {

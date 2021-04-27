@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class BasicsExamplePage extends StatefulWidget {
-  const BasicsExamplePage({Key key}) : super(key: key);
+  const BasicsExamplePage({Key? key}) : super(key: key);
 
   @override
   _BasicsExamplePageState createState() => _BasicsExamplePageState();
@@ -25,7 +25,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
         child: Container(
           child: Column(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("toogle: $_show"),
                 onPressed: () {
                   setState(() {
@@ -33,7 +33,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("change direction"),
                 onPressed: () {
                   setState(() {
@@ -55,7 +55,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("hideOnTap: $hideOnTap"),
                 onPressed: () {
                   setState(() {
@@ -63,7 +63,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   });
                 },
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("change border: $hideOnTap"),
                 onPressed: () {
                   setState(() {
@@ -89,10 +89,10 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                     child: Text("content!"),
                     color: Colors.blue,
                   ),
-                  routeObserver: MyApp.of(context).routeObserver,
+                  routeObserver: MyApp.of(context)?.routeObserver,
                 ),
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text("New route"),
                 onPressed: () {
                   Navigator.of(context).push(

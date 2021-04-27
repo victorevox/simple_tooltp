@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class AnimatedExamplePage extends StatefulWidget {
-  AnimatedExamplePage({Key key, this.title}) : super(key: key);
+  AnimatedExamplePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -13,7 +13,7 @@ class AnimatedExamplePage extends StatefulWidget {
 }
 
 class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
-  AnimationStatus _marginAnimationStatus;
+  AnimationStatus? _marginAnimationStatus;
 
   int _restartCount = 0;
 
@@ -44,7 +44,7 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                 height: 120,
                 child: Placeholder(),
               ),
-              builder: (context, margin, child) {
+              builder: (context, margin, builder) {
                 // print(_marginAnimationStatus);
                 return Container(
                   margin: _marginAnimationStatus == AnimationStatus.forward
@@ -57,7 +57,7 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                     backgroundColor:
                         _marginAnimationStatus == AnimationStatus.forward
                             ? Colors.white
-                            : Colors.blue[300],
+                            : Colors.blue[300]!,
                     borderColor:
                         _marginAnimationStatus == AnimationStatus.forward
                             ? Colors.purple
@@ -71,7 +71,7 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                         : _marginAnimationStatus == AnimationStatus.reverse
                             ? TooltipDirection.right
                             : TooltipDirection.left,
-                    child: child,
+                    child: builder ?? Container(),
                     content: Text(
                       "Some text example!!!!",
                       style: TextStyle(
@@ -93,16 +93,15 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
 
 class MarginTransition extends StatefulWidget {
   final Widget child;
-  final Widget Function(BuildContext, double margin, Widget child) builder;
-  final ValueChanged<AnimationStatus> animationStatusChange;
+  final Widget Function(BuildContext, double margin, Widget? child) builder;
+  final ValueChanged<AnimationStatus>? animationStatusChange;
 
   MarginTransition({
-    Key key,
-    @required this.child,
-    @required this.builder,
+    Key? key,
+    required this.child,
+    required this.builder,
     this.animationStatusChange,
-  })  : assert(builder != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _MarginTransitionState createState() => _MarginTransitionState();
@@ -110,8 +109,8 @@ class MarginTransition extends StatefulWidget {
 
 class _MarginTransitionState extends State<MarginTransition>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -129,7 +128,7 @@ class _MarginTransitionState extends State<MarginTransition>
             }
 
             if (widget.animationStatusChange != null) {
-              widget.animationStatusChange(_animationController.status);
+              widget.animationStatusChange!(_animationController.status);
             }
           });
   }

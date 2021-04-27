@@ -1,8 +1,8 @@
 part of tooltip;
 
-class _Ballon extends StatefulWidget {
+class _Balloon extends StatefulWidget {
   final TooltipDirection tooltipDirection;
-  final Offset targetCenter;
+  final Offset? targetCenter;
   final double borderRadius;
   final double arrowBaseWidth;
   final double arrowTipDistance;
@@ -14,63 +14,63 @@ class _Ballon extends StatefulWidget {
   // final double bottom;
   final double arrowLength;
   final Widget content;
-  final EdgeInsets ballonPadding;
+  final EdgeInsets balloonPadding;
   final Color backgroundColor;
   final List<BoxShadow> shadows;
-  final Function onTap;
+  final VoidCallback? onTap;
   final Function(_BallonSize) onSizeChange;
 
-  const _Ballon({
-    Key key,
+  const _Balloon({
+    Key? key,
     // this.left,
     // this.top,
     // this.right,
     // this.bottom,
-    @required this.tooltipDirection,
-    @required this.borderRadius,
-    @required this.arrowBaseWidth,
-    @required this.arrowTipDistance,
-    @required this.borderColor,
-    @required this.borderWidth,
-    @required this.arrowLength,
-    @required this.content,
-    @required this.ballonPadding,
-    @required this.backgroundColor,
-    @required this.shadows,
+    required this.tooltipDirection,
+    required this.borderRadius,
+    required this.arrowBaseWidth,
+    required this.arrowTipDistance,
+    required this.borderColor,
+    required this.borderWidth,
+    required this.arrowLength,
+    required this.content,
+    required this.balloonPadding,
+    required this.backgroundColor,
+    required this.shadows,
     this.targetCenter,
     this.onTap,
-    @required this.onSizeChange,
+    required this.onSizeChange,
   }) : super(key: key);
 
   @override
-  __BallonState createState() => __BallonState();
+  _BalloonState createState() => _BalloonState();
 }
 
-class __BallonState extends State<_Ballon> {
-  _BallonSize _lastSizeNotified;
+class _BalloonState extends State<_Balloon> {
+  _BallonSize? _lastSizeNotified;
 
   GlobalKey _containerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
-      final RenderBox renderBox =
-          _containerKey.currentContext.findRenderObject();
-      final Size size = renderBox.size;
+      final RenderBox? renderBox =
+          _containerKey.currentContext?.findRenderObject() as RenderBox?;
       if (renderBox == null) return null;
+      final Size size = renderBox.size;
       final position = renderBox.localToGlobal(Offset.zero);
       // print("position : ${position.dx},${position.dy}, Size: ${renderBox.size}");
 
       if (_lastSizeNotified == null ||
-          _lastSizeNotified.size != size ||
-          _lastSizeNotified.globalPosition != position) {
+          _lastSizeNotified!.size != size ||
+          _lastSizeNotified!.globalPosition != position) {
         final ballonSize = _BallonSize(
           size: size,
           globalPosition: position,
           context: context,
         );
-        widget.onSizeChange?.call(ballonSize);
+        widget.onSizeChange.call(ballonSize);
         _lastSizeNotified = ballonSize;
       }
     });
@@ -97,7 +97,7 @@ class __BallonState extends State<_Ballon> {
             widget.arrowLength,
           ),
         ),
-        padding: widget.ballonPadding,
+        padding: widget.balloonPadding,
         child: widget.content,
       ),
     );
@@ -105,7 +105,7 @@ class __BallonState extends State<_Ballon> {
 }
 
 class _BalloonShape extends ShapeBorder {
-  final Offset targetCenter;
+  final Offset? targetCenter;
   final double arrowBaseWidth;
   final double arrowTipDistance;
   final double borderRadius;
@@ -134,16 +134,21 @@ class _BalloonShape extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => new EdgeInsets.all(10.0);
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection textDirection}) {
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
     return new Path()
       ..fillType = PathFillType.evenOdd
       ..addPath(getOuterPath(rect), Offset.zero);
   }
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     //
     double topLeftRadius, topRightRadius, bottomLeftRadius, bottomRightRadius;
+
+    topLeftRadius = /* (left == 0 || top == 0) ? 0.0 : */ borderRadius;
+    topRightRadius = /* (right == 0 || top == 0) ? 0.0 : */ borderRadius;
+    bottomLeftRadius = /* (left == 0 || bottom == 0) ? 0.0 : */ borderRadius;
+    bottomRightRadius = /* (right == 0 || bottom == 0) ? 0.0 : */ borderRadius;
 
     Path _getLeftTopPath(Rect rect) {
       return new Path()
@@ -166,11 +171,6 @@ class _BalloonShape extends ShapeBorder {
         ..arcToPoint(Offset(rect.right - topRightRadius, rect.top),
             radius: new Radius.circular(topRightRadius), clockwise: false);
     }
-
-    topLeftRadius = /* (left == 0 || top == 0) ? 0.0 : */ borderRadius;
-    topRightRadius = /* (right == 0 || top == 0) ? 0.0 : */ borderRadius;
-    bottomLeftRadius = /* (left == 0 || bottom == 0) ? 0.0 : */ borderRadius;
-    bottomRightRadius = /* (right == 0 || bottom == 0) ? 0.0 : */ borderRadius;
 
     // final Offset targetCenter = this.targetCenter;
     Offset targetCenter = this.targetCenter ?? rect.center;
@@ -288,7 +288,7 @@ class _BalloonShape extends ShapeBorder {
   }
 
   @override
-  void paint(Canvas canvas, Rect rect, {TextDirection textDirection}) {
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
     Paint paint = new Paint()
       // if borderWidth is set to 0, set the color to be transparent to avoid border to be visible because strange behavior
       ..color = borderWidth == 0 ? Color(0x00000000) : borderColor
@@ -323,8 +323,8 @@ class _BallonSize {
   final Offset globalPosition;
   final BuildContext context;
   _BallonSize({
-    @required this.size,
-    @required this.globalPosition,
-    @required this.context,
+    required this.size,
+    required this.globalPosition,
+    required this.context,
   });
 }
