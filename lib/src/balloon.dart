@@ -2,7 +2,7 @@ part of tooltip;
 
 class _Ballon extends StatefulWidget {
   final TooltipDirection tooltipDirection;
-  // final Offset targetCenter;
+  final Offset? targetCenter;
   final double borderRadius;
   final double arrowBaseWidth;
   final double arrowTipDistance;
@@ -26,6 +26,7 @@ class _Ballon extends StatefulWidget {
     // this.top,
     // this.right,
     // this.bottom,
+    this.targetCenter,
     required this.tooltipDirection,
     required this.borderRadius,
     required this.arrowBaseWidth,
@@ -80,7 +81,7 @@ class __BallonState extends State<_Ballon> {
           color: widget.backgroundColor,
           shape: _BalloonShape(
             widget.tooltipDirection,
-            Offset.zero,
+            widget.targetCenter,
             widget.borderRadius,
             widget.arrowBaseWidth,
             widget.arrowTipDistance,
@@ -101,7 +102,7 @@ class __BallonState extends State<_Ballon> {
 }
 
 class _BalloonShape extends ShapeBorder {
-  final Offset targetCenter;
+  final Offset? targetCenter;
   final double arrowBaseWidth;
   final double arrowTipDistance;
   final double borderRadius;
@@ -167,8 +168,7 @@ class _BalloonShape extends ShapeBorder {
     bottomLeftRadius = /* (left == 0 || bottom == 0) ? 0.0 : */ borderRadius;
     bottomRightRadius = /* (right == 0 || bottom == 0) ? 0.0 : */ borderRadius;
 
-    // final Offset targetCenter = this.targetCenter;
-    Offset targetCenter = rect.center;
+    Offset targetCenter = this.targetCenter ?? rect.center;
     if (tooltipDirection == TooltipDirection.right) {
       targetCenter = rect.centerLeft.translate(-arrowLength, 0);
     } else if (tooltipDirection == TooltipDirection.left) {
