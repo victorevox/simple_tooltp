@@ -1,3 +1,9 @@
+## [1.0.0] - 08/08/21.
+
+* Merged https://github.com/victorevox/simple_tooltp/pull/25
+* Null safety
+* Feature, custom arrow offset
+  
 ## [0.1.16] - 04/11/20.
 
 * Fixed performance issues https://github.com/victorevox/simple_tooltp/issues/17 
