@@ -38,12 +38,13 @@ class SimpleTooltip extends StatefulWidget {
   /// defaults to [460] milliseconds
   final Duration animationDuration;
 
-  /// [top], [right], [bottom], [left] position the Tooltip absolute relative to the whole screen
-  double? top, right, bottom, left;
+  // TODO: Remove this if not needed anymore
+  // /// [top], [right], [bottom], [left] position the Tooltip absolute relative to the whole screen
+  // double? top, right, bottom, left;
 
   /// [minWidth], [minHeight], [maxWidth], [maxHeight] optional size constraints.
   /// If a constraint is not set the size will ajust to the content
-  double? minWidth, minHeight, maxWidth, maxHeight;
+  final double? minWidth, minHeight, maxWidth, maxHeight;
 
   ///
   /// The distance of the tip of the arrow's tip to the center of the target
@@ -68,6 +69,10 @@ class SimpleTooltip extends StatefulWidget {
   ///
   /// The width of the arrow at its base
   final double arrowBaseWidth;
+
+  ///
+  /// The targetCenter where the arrow points to(if null,defaults to center)
+  final Offset? targetCenter;
 
   ///
   /// The color of the border
@@ -103,6 +108,7 @@ class SimpleTooltip extends StatefulWidget {
     this.tooltipDirection = TooltipDirection.up,
     required this.content,
     required this.show,
+    this.targetCenter,
     // this.onClose,
     this.ballonPadding = const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     this.maxWidth,
@@ -321,6 +327,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
               borderRadius: widget.borderRadius,
               arrowBaseWidth: widget.arrowBaseWidth,
               arrowLength: widget.arrowLength,
+              targetCenter: widget.targetCenter,
               arrowTipDistance: widget.arrowTipDistance,
               ballonPadding: widget.ballonPadding,
               borderColor: widget.borderColor,
