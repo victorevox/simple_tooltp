@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class AnimatedExamplePage extends StatefulWidget {
-  AnimatedExamplePage({Key key, this.title}) : super(key: key);
+  const AnimatedExamplePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -13,7 +13,7 @@ class AnimatedExamplePage extends StatefulWidget {
 }
 
 class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
-  AnimationStatus _marginAnimationStatus;
+  AnimationStatus? _marginAnimationStatus;
 
   int _restartCount = 0;
 
@@ -39,7 +39,7 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                   }
                 });
               },
-              child: Container(
+              child: const SizedBox(
                 width: 280,
                 height: 120,
                 child: Placeholder(),
@@ -52,16 +52,11 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                       : EdgeInsets.only(right: margin),
                   child: SimpleTooltip(
                     tooltipTap: () {
-                      print("tooltip tap ${Random().nextDouble()}");
+                      debugPrint("tooltip tap ${Random().nextDouble()}");
                     },
                     backgroundColor:
-                        _marginAnimationStatus == AnimationStatus.forward
-                            ? Colors.white
-                            : Colors.blue[300],
-                    borderColor:
-                        _marginAnimationStatus == AnimationStatus.forward
-                            ? Colors.purple
-                            : Colors.orange,
+                        _marginAnimationStatus == AnimationStatus.forward ? Colors.white : Colors.blue[300] as Color,
+                    borderColor: _marginAnimationStatus == AnimationStatus.forward ? Colors.purple : Colors.orange,
                     show: true,
                     arrowTipDistance: 10,
                     tooltipDirection: _restartCount > 2
@@ -72,7 +67,7 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
                             ? TooltipDirection.right
                             : TooltipDirection.left,
                     child: child,
-                    content: Text(
+                    content: const Text(
                       "Some text example!!!!",
                       style: TextStyle(
                         color: Colors.black,
@@ -94,44 +89,43 @@ class _AnimatedExamplePageState extends State<AnimatedExamplePage> {
 class MarginTransition extends StatefulWidget {
   final Widget child;
   final Widget Function(BuildContext, double margin, Widget child) builder;
-  final ValueChanged<AnimationStatus> animationStatusChange;
+  final ValueChanged<AnimationStatus>? animationStatusChange;
 
-  MarginTransition({
-    Key key,
-    @required this.child,
-    @required this.builder,
+  const MarginTransition({
+    Key? key,
+    required this.child,
+    required this.builder,
     this.animationStatusChange,
-  })  : assert(builder != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _MarginTransitionState createState() => _MarginTransitionState();
 }
 
-class _MarginTransitionState extends State<MarginTransition>
-    with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+class _MarginTransitionState extends State<MarginTransition> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    );
     _animationController.forward();
-    _animation =
-        Tween<double>(begin: 10, end: 300).animate(_animationController)
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _animationController.reverse();
-            } else if (status == AnimationStatus.dismissed) {
-              _animationController.forward();
-            }
+    _animation = Tween<double>(begin: 10, end: 300).animate(_animationController)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animationController.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _animationController.forward();
+        }
 
-            if (widget.animationStatusChange != null) {
-              widget.animationStatusChange(_animationController.status);
-            }
-          });
+        if (widget.animationStatusChange != null) {
+          widget.animationStatusChange!(_animationController.status);
+        }
+      });
   }
 
   @override
@@ -140,7 +134,7 @@ class _MarginTransitionState extends State<MarginTransition>
       animation: _animation,
       child: widget.child,
       builder: (context, child) {
-        return widget.builder(context, _animation.value, child);
+        return widget.builder(context, _animation.value, child!);
       },
     );
   }

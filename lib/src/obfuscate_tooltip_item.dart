@@ -6,7 +6,7 @@ import 'package:simple_tooltip/simple_tooltip.dart';
 
 class ObfuscateTooltipItem extends StatefulWidget {
   /// This is just needed when the `ObfuscateTooltipItem` is placed outside the context
-  /// of `ObfuscateTooltipLayoutState`, ie: In a modal route or an OvelayLayout
+  /// of `ObfuscateTooltipLayoutState`, ie: In a modal route or an OverlayLayout
   final List<GlobalKey<SimpleTooltipState>> tooltipKeys;
 
   final Widget child;
@@ -15,8 +15,7 @@ class ObfuscateTooltipItem extends StatefulWidget {
     Key? key,
     required this.tooltipKeys,
     required this.child,
-  })  : assert(tooltipKeys != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   ObfuscateTooltipItemState createState() => ObfuscateTooltipItemState();
@@ -107,7 +106,7 @@ class ObfuscateTooltipItemState extends State<ObfuscateTooltipItem> with Widgets
   _removeFromTooltips(List<GlobalKey<SimpleTooltipState>> keys) {
     if (keys.isNotEmpty) {
       for (var tooltipKey in keys) {
-        tooltipKey.currentState?.removeObsfuscateItem(this);
+        tooltipKey.currentState?.removeObfuscatedItem(this);
       }
     }
   }

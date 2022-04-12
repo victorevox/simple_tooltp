@@ -1,13 +1,10 @@
 library tooltip;
 
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
-
-import 'types.dart';
 
 part 'ballon_transition.dart';
 part 'balloon.dart';
@@ -43,7 +40,7 @@ class SimpleTooltip extends StatefulWidget {
   // double? top, right, bottom, left;
 
   /// [minWidth], [minHeight], [maxWidth], [maxHeight] optional size constraints.
-  /// If a constraint is not set the size will ajust to the content
+  /// If a constraint is not set the size will adjust to the content
   final double? minWidth, minHeight, maxWidth, maxHeight;
 
   ///
@@ -130,8 +127,7 @@ class SimpleTooltip extends StatefulWidget {
     this.tooltipTap,
     this.hideOnTooltipTap = false,
     this.routeObserver,
-  })  : assert(show != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   SimpleTooltipState createState() => SimpleTooltipState();
@@ -165,7 +161,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     });
   }
 
-  removeObsfuscateItem(ObfuscateTooltipItemState item) {
+  removeObfuscatedItem(ObfuscateTooltipItemState item) {
     _obfuscateItems.remove(item);
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       doCheckForObfuscation();
@@ -279,25 +275,19 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   }) {
     var direction = widget.tooltipDirection;
 
-    if (direction == TooltipDirection.horizontal ||
-        direction == TooltipDirection.vertical) {
+    if (direction == TooltipDirection.horizontal || direction == TooltipDirection.vertical) {
       // compute real direction based on target position
       final targetRenderBox = context.findRenderObject() as RenderBox;
-      final overlayRenderBox = Overlay.of(context, rootOverlay: false)!
-          .context
-          .findRenderObject() as RenderBox?;
+      final overlayRenderBox = Overlay.of(context, rootOverlay: false)!.context.findRenderObject() as RenderBox?;
 
-      final targetGlobalCenter = targetRenderBox.localToGlobal(
-          targetRenderBox.size.center(Offset.zero),
-          ancestor: overlayRenderBox);
+      final targetGlobalCenter =
+          targetRenderBox.localToGlobal(targetRenderBox.size.center(Offset.zero), ancestor: overlayRenderBox);
 
       direction = (direction == TooltipDirection.vertical)
-          ? (targetGlobalCenter.dy <
-                  overlayRenderBox!.size.center(Offset.zero).dy
+          ? (targetGlobalCenter.dy < overlayRenderBox!.size.center(Offset.zero).dy
               ? TooltipDirection.down
               : TooltipDirection.up)
-          : (targetGlobalCenter.dx <
-                  overlayRenderBox!.size.center(Offset.zero).dx
+          : (targetGlobalCenter.dx < overlayRenderBox!.size.center(Offset.zero).dx
               ? TooltipDirection.right
               : TooltipDirection.left);
     }

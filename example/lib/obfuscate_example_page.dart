@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class ObfuscateExamplePage extends StatefulWidget {
-  const ObfuscateExamplePage({Key key}) : super(key: key);
+  const ObfuscateExamplePage({Key? key}) : super(key: key);
 
   @override
   _ObfuscateExamplePageState createState() => _ObfuscateExamplePageState();
@@ -20,10 +20,10 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Basics"),
+        title: const Text("Basics"),
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           child: Column(
             children: <Widget>[
               RaisedButton(
@@ -57,11 +57,11 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                 },
               ),
               RaisedButton(
-                child: Text("Show Dialog"),
+                child: const Text("Show Dialog"),
                 onPressed: () {
                   showGeneralDialog(
                     context: context,
-                    transitionDuration: Duration(milliseconds: 400),
+                    transitionDuration: const Duration(milliseconds: 400),
                     barrierDismissible: true,
                     barrierLabel: "label",
                     pageBuilder: (context, a1, a2) {
@@ -71,7 +71,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                         children: <Widget>[
                           ObfuscateTooltipItem(
                             tooltipKeys: [_exampleTooltipKey],
-                            child: Container(
+                            child: const SizedBox(
                               height: 100,
                               width: 300,
                               // constraints: BoxConstraints(maxHeight: 300),

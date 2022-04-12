@@ -9,6 +9,8 @@ final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: OptionsPage(),
+        home: const OptionsPage(),
         navigatorObservers: [
           routeObserver,
         ],
@@ -36,16 +38,16 @@ class MyApp extends StatelessWidget {
 class _MyAppData extends InheritedWidget {
   final RouteObserver<PageRoute> routeObserver;
 
-  _MyAppData({
-    Key key,
-    this.child,
-    this.routeObserver,
+  const _MyAppData({
+    Key? key,
+    required this.child,
+    required this.routeObserver,
   }) : super(key: key, child: child);
 
   final Widget child;
 
   static _MyAppData of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<_MyAppData>();
+    return context.dependOnInheritedWidgetOfExactType<_MyAppData>()!;
   }
 
   @override
@@ -55,15 +57,15 @@ class _MyAppData extends InheritedWidget {
 }
 
 class OptionsPage extends StatelessWidget {
-  const OptionsPage({Key key}) : super(key: key);
+  const OptionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Simple Tooltip"),
+        title: const Text("Simple Tooltip"),
       ),
-      body: Container(
+      body: SizedBox(
         height: double.infinity,
         width: double.maxFinite,
         child: Center(
@@ -71,26 +73,26 @@ class OptionsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               RaisedButton(
-                child: Text("Animated example"),
+                child: const Text("Animated example"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => AnimatedExamplePage(title: 'Flutter Demo Home Page'),
+                    builder: (ctx) => const AnimatedExamplePage(title: 'Flutter Demo Home Page'),
                   ));
                 },
               ),
               RaisedButton(
-                child: Text("Basics"),
+                child: const Text("Basics"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => BasicsExamplePage(),
+                    builder: (ctx) => const BasicsExamplePage(),
                   ));
                 },
               ),
               RaisedButton(
-                child: Text("Obfuscate"),
+                child: const Text("Obfuscate"),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => ObfuscateExamplePage(),
+                    builder: (ctx) => const ObfuscateExamplePage(),
                   ));
                 },
               ),

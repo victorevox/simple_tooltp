@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class BasicsExamplePage extends StatefulWidget {
-  const BasicsExamplePage({Key key}) : super(key: key);
+  const BasicsExamplePage({Key? key}) : super(key: key);
 
   @override
   _BasicsExamplePageState createState() => _BasicsExamplePageState();
@@ -19,14 +19,14 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Basics"),
+        title: const Text("Basics"),
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           child: Column(
             children: <Widget>[
               RaisedButton(
-                child: Text("toogle: $_show"),
+                child: Text("toggle: $_show"),
                 onPressed: () {
                   setState(() {
                     _show = !_show;
@@ -86,21 +86,21 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                   minWidth: 200,
                   content: Container(
                     width: 200,
-                    child: Text("content!"),
+                    child: const Text("content!"),
                     color: Colors.blue,
                   ),
                   routeObserver: MyApp.of(context).routeObserver,
                 ),
               ),
               RaisedButton(
-                child: Text("New route"),
+                child: const Text("New route"),
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (ctx) {
                         return Scaffold(
                           appBar: AppBar(),
-                          body: Placeholder(),
+                          body: const Placeholder(),
                         );
                       },
                     ),
