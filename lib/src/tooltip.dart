@@ -155,7 +155,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   addObfuscateItem(ObfuscateTooltipItemState item) {
     _obfuscateItems.add(item);
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       doCheckForObfuscation();
       doShowOrHide();
     });
@@ -163,7 +163,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
 
   removeObfuscatedItem(ObfuscateTooltipItemState item) {
     _obfuscateItems.remove(item);
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       doCheckForObfuscation();
       doShowOrHide();
     });
@@ -185,7 +185,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (shouldShowTooltip) {
         _showTooltip();
       }
@@ -199,7 +199,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
       oldWidget.routeObserver?.unsubscribe(this);
       widget.routeObserver?.subscribe(this, ModalRoute.of(context) as PageRoute<dynamic>);
     }
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (oldWidget.tooltipDirection != widget.tooltipDirection || (oldWidget.show != widget.show && widget.show)) {
         _transitionKey = GlobalKey();
       }
@@ -358,7 +358,7 @@ class SimpleTooltipState extends State<SimpleTooltip> with RouteAware {
     // Route was pushed onto navigator and is now topmost route.
     if (shouldShowTooltip) {
       _removeTooltip();
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (!mounted) return;
         _showTooltip();
       });

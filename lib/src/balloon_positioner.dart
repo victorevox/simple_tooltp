@@ -131,7 +131,7 @@ class __BallonPositionerState extends State<_BallonPositioner> {
       ),
     );
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final ballonContext = _ballonKey.currentContext;
       if (ballonContext != null) {
         // final bRenderO = ballonContext.findRenderObject();

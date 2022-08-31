@@ -53,7 +53,7 @@ class __BallonState extends State<_Ballon> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!mounted) return;
       final RenderBox? renderBox = _containerKey.currentContext!.findRenderObject() as RenderBox?;
       if (renderBox == null) return null;
