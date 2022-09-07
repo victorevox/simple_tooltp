@@ -1,3 +1,6 @@
+## [1.2.0] - 07/09/22
+* Updated for flutter 3.0.5
+
 ## [1.0.0] - 08/08/21.
 
 * Merged https://github.com/victorevox/simple_tooltp/pull/25
