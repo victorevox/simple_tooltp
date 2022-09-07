@@ -14,7 +14,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
   // bool hideOnTap = false;
   TooltipDirection _direction = TooltipDirection.down;
   // bool _changeBorder = false;
-  GlobalKey<SimpleTooltipState> _exampleTooltipKey = GlobalKey();
+  final GlobalKey<SimpleTooltipState> _exampleTooltipKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                 },
               ),
               RaisedButton(
-                child: Text("change direction"),
+                child: const Text("change direction"),
                 onPressed: () {
                   setState(() {
                     switch (_direction) {
@@ -102,7 +102,7 @@ class _ObfuscateExamplePageState extends State<ObfuscateExamplePage> {
                   minWidth: 200,
                   content: Container(
                     width: 200,
-                    child: Text("content!"),
+                    child: const Text("content!"),
                     color: Colors.blue,
                   ),
                   routeObserver: MyApp.of(context).routeObserver,

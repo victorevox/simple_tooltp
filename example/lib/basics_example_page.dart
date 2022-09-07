@@ -34,7 +34,7 @@ class _BasicsExamplePageState extends State<BasicsExamplePage> {
                 },
               ),
               RaisedButton(
-                child: Text("change direction"),
+                child: const Text("change direction"),
                 onPressed: () {
                   setState(() {
                     switch (_direction) {

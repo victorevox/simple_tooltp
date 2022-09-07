@@ -6,7 +6,7 @@ import 'animated_example_page.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -44,6 +44,7 @@ class _MyAppData extends InheritedWidget {
     required this.routeObserver,
   }) : super(key: key, child: child);
 
+  @override
   final Widget child;
 
   static _MyAppData of(BuildContext context) {
