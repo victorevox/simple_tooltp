@@ -228,7 +228,7 @@ class _BalloonShape extends ShapeBorder {
               rect.right,
               max(min(targetCenter.dy - arrowBaseWidth / 2, rect.bottom - bottomRightRadius - arrowBaseWidth),
                   rect.top + topRightRadius))
-          ..lineTo(targetCenter.dx - arrowTipDistance, targetCenter.dy) // right to arrow tip   \
+          ..lineTo(targetCenter.dx, targetCenter.dy) // right to arrow tip   \
           //  left /
           ..lineTo(rect.right, min(targetCenter.dy + arrowBaseWidth / 2, rect.bottom - bottomRightRadius))
           ..lineTo(rect.right, rect.bottom - borderRadius)
@@ -249,7 +249,7 @@ class _BalloonShape extends ShapeBorder {
                   rect.top + topLeftRadius))
 
           //left to arrow tip   /
-          ..lineTo(targetCenter.dx + arrowTipDistance, targetCenter.dy)
+          ..lineTo(targetCenter.dx, targetCenter.dy)
 
           //  right \
           ..lineTo(rect.left, min(targetCenter.dy + arrowBaseWidth / 2, rect.bottom - bottomLeftRadius))
